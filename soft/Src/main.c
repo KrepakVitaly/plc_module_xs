@@ -63,30 +63,25 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define PACKET_SIZE 13
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
 int send;
-int plc_rxed;
 uint8_t dali_cntr;
-uint8_t my_id = 0x000001;
-
-uint8_t plc_uart_example[16] = {0x0c, 0x56, 0x12, 0x54, 0x00, 0x00, 0x01, 0x01, 0x0a, 0x0c, 0x26, 0x68, 0x95, 0, 0, 0};
-
+uint8_t new_byte_received = 0;
 uint8_t plc_uart_answer_ok[16] = {0x0b, 0x56, 0x12, 0x54, 0x00, 0x00, 0x01, 0x00, 0x0a, 0x0c, 0x26, 0x68};
-
-uint32_t crc_reg = 0;
 
 uint32_t dali_cmd = 0x01FE01; //0000 0001 - start, 0 000 000 0 0001 0001
 uint32_t dali_cmd_sh= 0x01FE01; //0000 0001 - start, 1 111 111 0 0000 0001
 
-//uint32_t dali_cmd = 0x01FE01; //0b11111110 0b00000001
+uint8_t plc_uart_buf = 0;
 uint8_t plc_uart_cycle_buf[PLC_UART_CYCLE_BUF_LEN] = {0};
-uint16_t plc_uart_buf_offset;
-uint32_t plc_uart_byte_num;
+uint32_t plc_circular_buf_data_size;
+uint32_t plc_circular_buf_start;
+uint32_t plc_circular_buf_end;
 
 /* USER CODE END PV */
 
@@ -109,11 +104,11 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 //dali_cmd = 0x01FEFE;
-  plc_uart_buf_offset = 0;
+  plc_circular_buf_start = 0;
+  plc_circular_buf_end = 0;
   send = 0;
-  plc_rxed = 0;
   dali_cntr = 0;
-  plc_uart_byte_num = 0;
+  
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -144,6 +139,8 @@ int main(void)
   
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
   HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+  
+  uint32_t plc_circular_buf_clear_size = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -154,34 +151,51 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     
-    HAL_UART_Receive_IT(&huart1, plc_uart_cycle_buf+plc_uart_buf_offset, 13);
-    
-    if (plc_uart_buf_offset > 18)
+    //Receive 1 byte from KQ130F
+    if (new_byte_received == 0)
     {
-      for (int i = plc_uart_buf_offset-1; i > 18; i--)
+      HAL_UART_Receive_IT(&huart1, &plc_uart_buf, 1);
+      continue;
+    }
+    
+    plc_circular_buf_clear_size = 0;
+    
+    // if there is a chance to contain full packet plc_circular_buf_data_size
+    // must be greater or equal than PACKET_SIZE
+    if (plc_circular_buf_data_size >= PACKET_SIZE) 
+    {
+      // try to find head of packet
+      // Byte No0 Contain PACKET_SIZE so start with the 1st byte in circular buf
+      for (int i = 1; i <= plc_circular_buf_data_size - PACKET_SIZE + 1; i++) 
       {
-        if ( plc_uart_cycle_buf[i-14] == 0x54 &&   // byte No3
-             plc_uart_cycle_buf[i-15] == 0x12 &&   // byte No2
-             plc_uart_cycle_buf[i-16] == 0x56 )    // byte No1
+        //if packet was found
+        if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 1] == 0x56 && // byte No1
+             plc_uart_cycle_buf[plc_circular_buf_start + i + 2] == 0x12 && // byte No2
+             plc_uart_cycle_buf[plc_circular_buf_start + i + 3] == 0x54  ) // byte No3
         {
-          if ( plc_uart_cycle_buf[i-11] == 0x01 ) //if address is 0x01 //byte No 6
+          //if address is valid
+          if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 4] == 0x00 &&
+               plc_uart_cycle_buf[plc_circular_buf_start + i + 5] == 0x00 &&
+               plc_uart_cycle_buf[plc_circular_buf_start + i + 6] == 0x02 ) //if address is 0x000001 //bytes No 4-6 
           {
-            dali_cmd = 0x01FE00 + plc_uart_cycle_buf[i-9]; // byte No8
-            plc_uart_answer_ok[7] =  dali_cmd & 0xFF;
-            HAL_UART_Transmit_IT(&huart1, plc_uart_answer_ok, plc_uart_answer_ok[0]);
             HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+            dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
+            //plc_uart_answer_ok[7] =  dali_cmd & 0xFF;
+            //HAL_UART_Transmit_IT(&huart1, plc_uart_answer_ok, plc_uart_answer_ok[0]);
           }
-          
-          for (int j = i - 17, k = 0; k < 13; j++, k++)
-          {
-            plc_uart_cycle_buf[j] = 0;
-          }
-          
+          plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
           break;
         }
+        else //if packet was not found, clear the previous byte
+        {
+          plc_circular_buf_clear_size++;
+        }
       }
+      //clear the first N bytes which is not the head of packet and processed packet
+      plc_circular_buf_start += plc_circular_buf_clear_size;
+      plc_circular_buf_data_size -= plc_circular_buf_clear_size;
     }
-    HAL_Delay(10);
+    new_byte_received = 0;
   }
   /* USER CODE END 3 */
 }
@@ -232,7 +246,6 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  
 	if (htim == &htim3)
 	{	
     send = 1;
@@ -270,13 +283,26 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)	
   {
-    //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-    plc_uart_buf_offset+=13;
-    plc_uart_byte_num+=13;
-    if (plc_uart_buf_offset >= PLC_UART_CYCLE_BUF_LEN)
+    plc_circular_buf_end+=1;
+    
+    if (plc_circular_buf_end >= PLC_UART_CYCLE_BUF_LEN)
     {
-      plc_uart_buf_offset = plc_uart_buf_offset-PLC_UART_CYCLE_BUF_LEN;
+      plc_circular_buf_end = PLC_UART_CYCLE_BUF_LEN - plc_circular_buf_end;
     }
+    
+    if (plc_circular_buf_end == plc_circular_buf_start)
+    {
+      plc_circular_buf_start++;
+    }
+    
+    if (plc_circular_buf_end >= plc_circular_buf_start)
+      plc_circular_buf_data_size = plc_circular_buf_end - plc_circular_buf_start;
+    else
+      plc_circular_buf_data_size = PLC_UART_CYCLE_BUF_LEN - plc_circular_buf_start + plc_circular_buf_end;
+    
+    plc_uart_cycle_buf[plc_circular_buf_end] = plc_uart_buf;
+    
+    new_byte_received = 1;
   }
 }
 
