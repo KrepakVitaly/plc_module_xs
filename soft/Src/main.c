@@ -44,6 +44,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "dali_interface_lib.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -70,7 +71,6 @@
 /* USER CODE BEGIN PV */
 int send;
 int plc_rxed;
-uint8_t packet_found;
 uint8_t dali_cntr;
 uint8_t my_id = 0x000001;
 
@@ -80,28 +80,7 @@ uint8_t plc_uart_answer_ok[16] = {0x0b, 0x56, 0x12, 0x54, 0x00, 0x00, 0x01, 0x00
 
 uint32_t crc_reg = 0;
 
-uint8_t usb_tx[32];
-
-/*In accordance with the DIN EN 60929 standard, addresses and commands are
-transmitted as numbers with a length of two bytes.
-
-These commands take the form Y AAA AAA S xxxx xxxx. 
-Each letter here stands for one bit.
-
-Y: type of address
-    0bin:    short address
-    1bin:    group address or collective call
-
-A: significant address bit
-
-S: selection bit (specifies the significance of the following eight bits):
-    0bin:    the 8 xxxx xxxx bits contain a value for direct control of the lamp power
-    1bin:    the 8 xxxx xxxx bits contain a command number.
-
-x: a bit in the lamp power or in the command number*/
-
 uint32_t dali_cmd = 0x01FE01; //0000 0001 - start, 0 000 000 0 0001 0001
-
 uint32_t dali_cmd_sh= 0x01FE01; //0000 0001 - start, 1 111 111 0 0000 0001
 
 //uint32_t dali_cmd = 0x01FE01; //0b11111110 0b00000001
@@ -135,7 +114,6 @@ int main(void)
   plc_rxed = 0;
   dali_cntr = 0;
   plc_uart_byte_num = 0;
-  packet_found = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -164,8 +142,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim1);  
   HAL_TIM_Base_Start_IT(&htim3);
   
-    //HAL_UART_Receive_IT(&huart1, bufdd, 2);
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
+  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -175,47 +153,35 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+    
     HAL_UART_Receive_IT(&huart1, plc_uart_cycle_buf+plc_uart_buf_offset, 13);
     
-    
-    packet_found = 0;
-    //if (plc_uart_byte_num % 13 == 0)
+    if (plc_uart_buf_offset > 18)
     {
-//      for (int i = plc_uart_buf_offset; i < PLC_UART_CYCLE_BUF_LEN; i++)//set interrupt off
-//      {
-//        
-//      }
-      if (plc_uart_buf_offset > 18)
+      for (int i = plc_uart_buf_offset-1; i > 18; i--)
       {
-        for (int i = plc_uart_buf_offset-1; i > 18; i--)//set interrupt off
+        if ( plc_uart_cycle_buf[i-14] == 0x54 &&   // byte No3
+             plc_uart_cycle_buf[i-15] == 0x12 &&   // byte No2
+             plc_uart_cycle_buf[i-16] == 0x56 )    // byte No1
         {
-          if ( plc_uart_cycle_buf[i-14] == 0x54 &&   // 3
-               plc_uart_cycle_buf[i-15] == 0x12 &&   // 2
-               plc_uart_cycle_buf[i-16] == 0x56 )    // 1
+          if ( plc_uart_cycle_buf[i-11] == 0x01 ) //if address is 0x01 //byte No 6
           {
-            //plc_uart_cycle_buf[i]
-            if ( plc_uart_cycle_buf[i-11] == 0x02 ) //if address is 0x01 //byte No 6
-              dali_cmd = 0x01FE00 + plc_uart_cycle_buf[i-9]; // byte No8
-            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-            
-            for (int j = i - 17, k = 0; k < 13; j++, k++)
-            {
-              usb_tx[k] = plc_uart_cycle_buf[j];
-              plc_uart_cycle_buf[j] = 0;
-            }
+            dali_cmd = 0x01FE00 + plc_uart_cycle_buf[i-9]; // byte No8
             plc_uart_answer_ok[7] =  dali_cmd & 0xFF;
             HAL_UART_Transmit_IT(&huart1, plc_uart_answer_ok, plc_uart_answer_ok[0]);
-            
-             
-            break;
+            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
           }
+          
+          for (int j = i - 17, k = 0; k < 13; j++, k++)
+          {
+            plc_uart_cycle_buf[j] = 0;
+          }
+          
+          break;
         }
       }
     }
-    
     HAL_Delay(10);
-    
   }
   /* USER CODE END 3 */
 }
@@ -267,41 +233,16 @@ void SystemClock_Config(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   
-	if (htim == &htim3) //enable interrupts from the UART2-5 which is disabled
+	if (htim == &htim3)
 	{	
-    
-//    dali_cmd = 0x01FE00;
-//    if (plc_uart_rx[0] == 0x01)
-//      dali_cmd = dali_cmd + plc_uart_rx[1];
-//    else
-//      dali_cmd = dali_cmd + plc_uart_rx[0];
-    //HAL_UART_Receive_IT(&huart1, bufdd, 2);
-   // uint8_t tmp[3] = {dali_cmd, dali_cmd >>8, dali_cmd>>16};
-    
-   // CDC_Transmit_FS(tmp, 3);
-// HAL_GPIO_WritePin(DALI_TX_GPIO_Port, DALI_TX_Pin, GPIO_PIN_RESET);
-    //send = 1;
-//    
-//    dali_cmd += 0x10;
-//    if (dali_cmd >= 0x01FEFF)
-//      dali_cmd = 0x01FE00;
-    
-//    if (dali_cmd == 0x01FF92)
-//      dali_cmd = 0x01FF93;  //0000 0001 - start, 1 111 111 1 1001 0011
-//    else 
-//      dali_cmd = 0x01FF92;  //0000 0001 - start, 1 111 111 1 1001 0010
-
-    
     send = 1;
 	}
-  if (htim == &htim1) //enable interrupts from the UART2-5 which is disabled
+  if (htim == &htim1) 
 	{	
     if (send == 1)
-
     {
       if (dali_cntr >= 34)
       {
-        
         dali_cntr = 0;
         HAL_GPIO_WritePin(DALI_TX_GPIO_Port, DALI_TX_Pin, GPIO_PIN_RESET);
         send = 0;
@@ -325,7 +266,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 }
 
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)	
@@ -337,51 +277,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     {
       plc_uart_buf_offset = plc_uart_buf_offset-PLC_UART_CYCLE_BUF_LEN;
     }
-    
   }
 }
 
-uint32_t crc32_ether(char *buf, int len, int clear)
-{
-        uint32_t *p = (uint32_t*) buf;
-        uint32_t crc, crc_reg;
-        uint32_t tmp = 0;
-        if(clear) __HAL_CRC_DR_RESET(&hcrc);
-  
-        if(len >=4) {
-                while(len >= 4) {
-                        tmp = __RBIT(*(p++));
-                        crc_reg = HAL_CRC_Accumulate(&hcrc, &tmp, 1);
-                        len -= 4;
-                }
-        } else {
-                crc = 0xFFFFFFFF;
-                uint32_t tmp_const = 0xEBABAB;
-                crc_reg = HAL_CRC_Accumulate(&hcrc, &tmp_const, 1);
-        }
-        crc = __RBIT(crc_reg);
-        if(len) {
-                HAL_CRC_Accumulate(&hcrc, &crc_reg, 1);
-                switch(len) {
-                        case 1:
-                        tmp = __RBIT((*p & 0xFF) ^ crc) >> 24;
-                        crc_reg = HAL_CRC_Accumulate(&hcrc, &tmp, 1);
-                        crc = ( crc >> 8 ) ^ __RBIT(crc_reg);
-                        break;
-                        case 2:
-                        tmp = __RBIT((*p & 0xFFFF) ^ crc) >> 16;
-                        crc_reg = HAL_CRC_Accumulate(&hcrc, &tmp, 1);
-                        crc = ( crc >> 16 ) ^ __RBIT(crc_reg);
-                        break;
-                        case 3:
-                        tmp = __RBIT((*p & 0xFFFFFF) ^ crc) >> 8;
-                        crc_reg = HAL_CRC_Accumulate(&hcrc, &tmp, 1);
-                        crc = ( crc >> 24 ) ^ __RBIT(crc_reg);
-                        break;
-                }
-        }
-        return ~crc;
-}
 /* USER CODE END 4 */
 
 /**

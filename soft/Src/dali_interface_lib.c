@@ -1,0 +1,1 @@
+#include "dali_interface_lib.h"
