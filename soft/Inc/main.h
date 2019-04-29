@@ -86,25 +86,7 @@ void Error_Handler(void);
 #define DALI_RX_GPIO_Port GPIOA
 #define LED_Pin GPIO_PIN_1
 #define LED_GPIO_Port GPIOB
-/* USER CODE BEGIN Private defines */
-
-
-
-///**
-// * @brief  CRC functions
-// */
-//#define __HAL_RCC_CRC_CLK_ENABLE()   do { \
-//                                        __IO uint32_t tmpreg; \
-//                                        SET_BIT(RCC->AHBENR, RCC_AHBENR_CRCEN);\
-//                                        /* Delay after an RCC peripheral clock enabling */\
-//                                        tmpreg = READ_BIT(RCC->AHBENR, RCC_AHBENR_CRCEN);\
-//                                        UNUSED(tmpreg); \
-//                                      } while(0)
-
-//#define __HAL_RCC_CRC_CLK_DISABLE()       (RCC->AHBENR &= ~(RCC_AHBENR_CRCEN))
-
-#define CRC32_POLYNOMIAL                        ((u32)0xEDB88320)  
-#define RCC_CRC_BIT                             ((u32)0x00001000)                
+/* USER CODE BEGIN Private defines */              
 
 #define PLC_UART_CYCLE_BUF_LEN 1024
 #define DALI_MAX_CTR 34
