@@ -1,0 +1,14 @@
+*.d
+*.o
+*.crf
+*.__i
+*.scvd
+*.iex
+*plc_module_xs.uvguix*
+*plc_module_xs_plc_module_xs.dep
+*plc_module_xs.htm
+*plc_module_xs.build_log.htm
+*plc_module_xs.lnp
+*plc_module_xs.sct
+*plc_module_xs.map
+*plc_module_xs.axf
