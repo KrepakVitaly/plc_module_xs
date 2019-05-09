@@ -72,7 +72,7 @@
 int send;
 uint8_t dali_cntr;
 
-//                                SIZE| HEAD OF PACKET  |     ADDRESS     | STAT | LEVEL |   CRC32 (not used)  |
+//                                SIZE| HEAD OF PACKET |     ADDRESS     | STAT | LEVEL |   CRC32 (not used)  |
 //                                  0     1     2    3      4    5     6      7     8     9     10   11    12
 uint8_t plc_uart_answer_ok[13] = {0x0c, 0x62, 0xAA, 0x77, 0x00, 0x00, 0x02, 0x00, 0x0a, 0x0c, 0x26, 0x68, 0x68};
 
@@ -177,14 +177,30 @@ int main(void)
           //if address is valid
           if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 4] == 0x00 &&
                plc_uart_cycle_buf[plc_circular_buf_start + i + 5] == 0x00 &&
-               plc_uart_cycle_buf[plc_circular_buf_start + i + 6] == 0x02 ) //if address is 0x000001 //bytes No 4-6 
+               plc_uart_cycle_buf[plc_circular_buf_start + i + 6] == 0x01 ) //if address is 0x000001 //bytes No 4-6 
           {
             HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
             dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
+            plc_uart_answer_ok[4] = 0x00;
+            plc_uart_answer_ok[5] = 0x00;
+            plc_uart_answer_ok[6] = 0x01;
             plc_uart_answer_ok[7] =  0x00; //status ok
             plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
             while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, 13, 100) != HAL_OK);
           }
+          plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
+          break;
+        }
+         //if broadcast packet was found
+        else if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 1] == 0x32 && // byte No1
+                  plc_uart_cycle_buf[plc_circular_buf_start + i + 2] == 0x02 && // byte No2
+                  plc_uart_cycle_buf[plc_circular_buf_start + i + 3] == 0x77  ) // byte No3
+        {
+          HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+          dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
+          plc_uart_answer_ok[7] =  0x00; //status ok
+          plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
+
           plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
           break;
         }
