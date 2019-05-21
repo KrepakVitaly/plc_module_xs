@@ -64,17 +64,28 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 #define PACKET_SIZE 13
+
+#define MY_ADDR_0 0x00
+#define MY_ADDR_1 0x00
+#define MY_ADDR_2 0x02
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+uint32_t my_address = (MY_ADDR_0 << 16) + (MY_ADDR_1 << 8) + MY_ADDR_2;
+
 int send;
 uint8_t dali_cntr;
 
-//                                SIZE| HEAD OF PACKET |     ADDRESS     | STAT | LEVEL |   CRC32 (not used)  |
-//                                  0     1     2    3      4    5     6      7     8     9     10   11    12
-uint8_t plc_uart_answer_ok[13] = {0x0c, 0x62, 0xAA, 0x77, 0x00, 0x00, 0x02, 0x00, 0x0a, 0x0c, 0x26, 0x68, 0x68};
+//                                SIZE| HEAD OF PACKET |             ADDRESS             | STAT | LEVEL |   CRC32 (not used)  |
+//                                  0     1     2    3      4            5           6      7     8     9     10   11    12
+uint8_t plc_uart_answer_ok[13] = {0x0c, 0x62, 0xAA, 0x77, MY_ADDR_0, MY_ADDR_1, MY_ADDR_2, 0x00, 0x0a, 0x0c, 0x26, 0x68, 0x68};
+
+//                                      SIZE| HEAD OF PACKET |     ADDRESS    |  CMD  | DATA |   CRC32 (not used)  |
+//                                       0     1     2    3      4    5     6      7     8     9     10   11    12
+uint8_t lamp_get_status[PACKET_SIZE] = {0x0c ,0x56 ,0x12 ,0x54 ,0x00 ,0x00 ,0x01 ,0x02 ,0x00 ,0xec ,0xf3 ,0x81 ,0x8b};
 
 uint32_t dali_cmd = 0x01FE01; //0000 0001 - start, 0 000 000 0 0001 0001
 uint32_t dali_cmd_sh= 0x01FE01; //0000 0001 - start, 1 111 111 0 0000 0001
@@ -175,15 +186,20 @@ int main(void)
              plc_uart_cycle_buf[plc_circular_buf_start + i + 3] == 0x54  ) // byte No3
         {
           //if address is valid
-          if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 4] == 0x00 &&
-               plc_uart_cycle_buf[plc_circular_buf_start + i + 5] == 0x00 &&
-               plc_uart_cycle_buf[plc_circular_buf_start + i + 6] == 0x01 ) //if address is 0x000001 //bytes No 4-6 
+          if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 4] == MY_ADDR_0 && //bytes No 4-6 
+               plc_uart_cycle_buf[plc_circular_buf_start + i + 5] == MY_ADDR_1 &&
+               plc_uart_cycle_buf[plc_circular_buf_start + i + 6] == MY_ADDR_2 )
           {
-            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-            dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
-            plc_uart_answer_ok[4] = 0x00;
-            plc_uart_answer_ok[5] = 0x00;
-            plc_uart_answer_ok[6] = 0x01;
+            
+            if (plc_uart_cycle_buf[plc_circular_buf_start + i + 7] == 0x01) // byte No7
+            {
+              dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
+              HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+            }
+                          
+            plc_uart_answer_ok[4] = MY_ADDR_0;
+            plc_uart_answer_ok[5] = MY_ADDR_1;
+            plc_uart_answer_ok[6] = MY_ADDR_2;
             plc_uart_answer_ok[7] =  0x00; //status ok
             plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
             while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, 13, 100) != HAL_OK);
@@ -191,7 +207,7 @@ int main(void)
           plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
           break;
         }
-         //if broadcast packet was found
+        //if broadcast packet was found
         else if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 1] == 0x32 && // byte No1
                   plc_uart_cycle_buf[plc_circular_buf_start + i + 2] == 0x02 && // byte No2
                   plc_uart_cycle_buf[plc_circular_buf_start + i + 3] == 0x77  ) // byte No3
@@ -200,9 +216,30 @@ int main(void)
           dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
           plc_uart_answer_ok[7] =  0x00; //status ok
           plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
-
           plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
           break;
+        }
+        //if multicast packet was found
+        else if ( plc_uart_cycle_buf[plc_circular_buf_start + i + 1] == 0x19 && // byte No1
+                  plc_uart_cycle_buf[plc_circular_buf_start + i + 2] == 0xB3 && // byte No2
+                  plc_uart_cycle_buf[plc_circular_buf_start + i + 3] == 0xEE  ) // byte No3
+        {
+          uint32_t packet_address = (plc_uart_cycle_buf[plc_circular_buf_start + i + 4] << 16) + //bytes No 4-6 
+                                   (plc_uart_cycle_buf[plc_circular_buf_start + i + 5] << 8) + 
+                                    plc_uart_cycle_buf[plc_circular_buf_start + i + 6];
+          
+          uint16_t offset = plc_uart_cycle_buf[plc_circular_buf_start + i + 7];  // byte No7
+          
+          if ( my_address >= packet_address && my_address <= (packet_address + offset))
+          {
+            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+            dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
+            plc_uart_answer_ok[7] =  0x00; //status ok
+            plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
+          }
+          plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
+          break;
+          
         }
         else //if packet was not found, clear the previous byte
         {
