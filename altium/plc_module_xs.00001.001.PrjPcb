@@ -310,6 +310,10 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=KSHJJICO
 
+[GeneratedDocument1]
+DocumentPath=_Outputs\Design Rule Check - plc_module_xs.00001.html
+DItemRevisionGUID=
+
 [Parameter1]
 Name=GlobalOrganizationName
 Value=TheGreenLight
