@@ -1,6 +1,6 @@
 [Design]
 Version=1.0
-HierarchyMode=3
+HierarchyMode=2
 ChannelRoomNamingStyle=0
 ReleasesFolder=
 ChannelDesignatorFormatString=$Component_$RoomName
@@ -158,23 +158,6 @@ GenerateClassCluster=0
 DocumentUniqueId=TBYWGQNE
 
 [Document8]
-DocumentPath=plc_module_xs.00001.001_CurrentSense.SchDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=0
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=GQYECTPN
-
-[Document9]
 DocumentPath=plc_module_xs.00001.001_DALI_Master.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -184,14 +167,14 @@ AnnotateScope=All
 AnnotateOrder=1
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
+ClassGenCCAutoEnabled=0
 ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=NLVTLTMQ
 
-[Document10]
+[Document9]
 DocumentPath=plc_module_xs.00001.001_KQ330.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -201,14 +184,14 @@ AnnotateScope=All
 AnnotateOrder=2
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
+ClassGenCCAutoEnabled=0
 ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=BRQCICHH
 
-[Document11]
+[Document10]
 DocumentPath=plc_module_xs.00001.001_Power.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -218,14 +201,14 @@ AnnotateScope=All
 AnnotateOrder=3
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
+ClassGenCCAutoEnabled=0
 ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=YCQVGFXM
 
-[Document12]
+[Document11]
 DocumentPath=plc_module_xs.00001.001_STM32.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -235,14 +218,14 @@ AnnotateScope=All
 AnnotateOrder=4
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
+ClassGenCCAutoEnabled=0
 ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=MRRTEFIV
 
-[Document13]
+[Document12]
 DocumentPath=plc_module_xs.00001.001_Top.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -252,14 +235,14 @@ AnnotateScope=All
 AnnotateOrder=5
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
+ClassGenCCAutoEnabled=0
 ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=OMGDPOVF
 
-[Document14]
+[Document13]
 DocumentPath=..\..\..\light_libs\altium_libs\GOST_IMPORT_PARTS.DbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -276,7 +259,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document15]
+[Document14]
 DocumentPath=..\..\..\light_libs\altium_libs\GOST_RU_PARTS.DbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -293,7 +276,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document16]
+[Document15]
 DocumentPath=..\..\..\light_libs\altium_libs\pcb\glight_custom.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -315,20 +298,20 @@ DocumentPath=_Outputs\Design Rule Check - plc_module_xs.00001.html
 DItemRevisionGUID=
 
 [Parameter1]
-Name=GlobalOrganizationName
-Value=TheGreenLight
+Name=GlobalProjectRevision
+Value=1.0
 
 [Parameter2]
-Name=GlobalProjectName
-Value=plc_module_xs
-
-[Parameter3]
 Name=GlobalProjectNumber
 Value=000001.001
 
+[Parameter3]
+Name=GlobalProjectName
+Value=plc_module_xs
+
 [Parameter4]
-Name=GlobalProjectRevision
-Value=1.0
+Name=GlobalOrganizationName
+Value=TheGreenLight
 
 [Configuration1]
 Name=Default Configuration
