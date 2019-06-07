@@ -299,7 +299,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x1000</Size>
+                <Size>0x8000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -425,6 +425,21 @@
               <FileName>stm32f0xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f0xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>circular_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\circular_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>dali_interface_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\dali_interface_lib.c</FilePath>
+            </File>
+            <File>
+              <FileName>plc_mmrpi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\plc_mmrpi.c</FilePath>
             </File>
           </Files>
         </Group>

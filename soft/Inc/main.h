@@ -88,22 +88,10 @@ void Error_Handler(void);
 #define LED_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */              
 
-#define PLC_UART_CYCLE_BUF_LEN 1024
-#define DALI_MAX_CTR 34
-#define DEFAULT_PLC_PACKET_LEN 13
 
-#define HEAD_BYTE_1 0x56
-#define HEAD_BYTE_2 0x12
-#define HEAD_BYTE_3 0x54
 
-#define CRC_LENGTH 32
 
-#define MY_ID 0x000001
-#define MY_ID_0 (MY_ID & 0x0000FF)
-#define MY_ID_1 ((MY_ID >> 8) & 0x0000FF)
-#define MY_ID_2 ((MY_ID >> 16) & 0x0000FF)
 
-#define CMD_SET_BRIGHTNESS 0x01
 
 
 /* USER CODE END Private defines */

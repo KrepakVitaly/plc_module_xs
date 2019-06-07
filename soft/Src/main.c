@@ -45,7 +45,8 @@
 #include "usart.h"
 #include "gpio.h"
 #include "dali_interface_lib.h"
-
+#include "circular_buffer.h"
+#include "plc_mmrpi.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -58,43 +59,24 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define CRC_LENGTH 32
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define PACKET_SIZE 13
 
-#define MY_ADDR_0 0x00
-#define MY_ADDR_1 0x00
-#define MY_ADDR_2 0x01
+
+
 
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint32_t my_address = (MY_ADDR_0 << 16) + (MY_ADDR_1 << 8) + MY_ADDR_2;
+
 
 int send;
-uint8_t dali_cntr;
 
-//                                SIZE| HEAD OF PACKET |             ADDRESS             | STAT | LEVEL |   CRC32 (not used)  |
-//                                  0     1     2    3      4            5           6      7     8     9     10   11    12
-uint8_t plc_uart_answer_ok[13] = {0x0c, 0x62, 0xAA, 0x77, MY_ADDR_0, MY_ADDR_1, MY_ADDR_2, 0x00, 0x0a, 0x0c, 0x26, 0x68, 0x68};
-
-//                                      SIZE| HEAD OF PACKET |     ADDRESS    |  CMD  | DATA |   CRC32 (not used)  |
-//                                       0     1     2    3      4    5     6      7     8     9     10   11    12
-uint8_t lamp_get_status[PACKET_SIZE] = {0x0c ,0x56 ,0x12 ,0x54 ,0x00 ,0x00 ,0x01 ,0x02 ,0x00 ,0xec ,0xf3 ,0x81 ,0x8b};
-
-uint32_t dali_cmd = 0x01FE01; //0000 0001 - start, 0 000 000 0 0001 0001
-uint32_t dali_cmd_sh= 0x01FE01; //0000 0001 - start, 1 111 111 0 0000 0001
-
-uint8_t plc_uart_buf = 0;
-uint8_t plc_uart_cycle_buf[PLC_UART_CYCLE_BUF_LEN] = {0};
-uint32_t plc_circular_buf_data_size;
-uint32_t plc_circular_buf_start;
-uint32_t plc_circular_buf_end;
 uint8_t new_byte_received = 0;
 
 uint8_t last_command = 0;
@@ -152,7 +134,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim3);
   
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
   
   uint32_t plc_circular_buf_clear_size = 0;
   /* USER CODE END 2 */
@@ -204,7 +186,7 @@ int main(void)
             plc_uart_answer_ok[4] = MY_ADDR_0;
             plc_uart_answer_ok[5] = MY_ADDR_1;
             plc_uart_answer_ok[6] = MY_ADDR_2;
-            plc_uart_answer_ok[7] =  0x00; //status ok
+            plc_uart_answer_ok[7] =  0x01; //status ok
             plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
             while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, 13, 100) != HAL_OK);
           }
@@ -219,7 +201,7 @@ int main(void)
           HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
           last_command = 1;
           dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
-          plc_uart_answer_ok[7] =  0x00; //status ok
+          plc_uart_answer_ok[7] =  0x01; //status ok
           plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
           plc_circular_buf_clear_size += PACKET_SIZE; //packet was read and throwed away
           break;

@@ -15,6 +15,8 @@ extern "C" {
 	
 #include "stm32f0xx_hal.h"
 
+#define DALI_MAX_CTR 34
+
 /*In accordance with the DIN EN 60929 standard, addresses and commands are
 transmitted as numbers with a length of two bytes.
 
@@ -33,7 +35,10 @@ S: selection bit (specifies the significance of the following eight bits):
 
 x: a bit in the lamp power or in the command number*/
 
+extern uint8_t dali_cntr;
 
+extern uint32_t dali_cmd;
+extern uint32_t dali_cmd_sh;
 
 #ifdef __cplusplus
 }
