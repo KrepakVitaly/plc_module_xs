@@ -67,7 +67,7 @@
 
 #define MY_ADDR_0 0x00
 #define MY_ADDR_1 0x00
-#define MY_ADDR_2 0x02
+#define MY_ADDR_2 0x01
 
 /* USER CODE END PM */
 
@@ -194,9 +194,8 @@ int main(void)
             if (plc_uart_cycle_buf[plc_circular_buf_start + i + 7] == 0x01) // byte No7
             {
               dali_cmd = 0x01FE00 + plc_uart_cycle_buf[plc_circular_buf_start + i + 8]; // byte No8
-              HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
             }
-                          
+            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
             plc_uart_answer_ok[4] = MY_ADDR_0;
             plc_uart_answer_ok[5] = MY_ADDR_1;
             plc_uart_answer_ok[6] = MY_ADDR_2;
