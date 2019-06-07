@@ -40,6 +40,9 @@ extern uint8_t dali_cntr;
 extern uint32_t dali_cmd;
 extern uint32_t dali_cmd_sh;
 
+
+uint8_t step_DALI_set_brightness();
+
 #ifdef __cplusplus
 }
 #endif
