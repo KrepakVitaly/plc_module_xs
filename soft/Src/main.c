@@ -73,8 +73,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
-
 int send;
 
 uint8_t new_byte_received = 0;
@@ -186,7 +184,7 @@ int main(void)
             plc_uart_answer_ok[4] = MY_ADDR_0;
             plc_uart_answer_ok[5] = MY_ADDR_1;
             plc_uart_answer_ok[6] = MY_ADDR_2;
-            plc_uart_answer_ok[7] =  0x01; //status ok
+            plc_uart_answer_ok[7] =  0x00; //status ok
             plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
             while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, 13, 100) != HAL_OK);
           }
@@ -297,27 +295,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{	
     if (send == 1)
     {
-      if (dali_cntr >= 34)
-      {
-        dali_cntr = 0;
-        HAL_GPIO_WritePin(DALI_TX_GPIO_Port, DALI_TX_Pin, GPIO_PIN_RESET);
-        send = 0;
-        return;
-      }
-      
-      if (dali_cntr % 2 == 0)
-      {
-        if( ((dali_cmd >> (17 - dali_cntr/2 - 1)) & 0x01) == 1 )
-          HAL_GPIO_WritePin(DALI_TX_GPIO_Port, DALI_TX_Pin, GPIO_PIN_SET);
-        else
-          HAL_GPIO_WritePin(DALI_TX_GPIO_Port, DALI_TX_Pin, GPIO_PIN_RESET);
-      }
-      else
-      {
-        HAL_GPIO_TogglePin(DALI_TX_GPIO_Port, DALI_TX_Pin);
-      }
-      
-      dali_cntr++;
+      send = step_DALI_set_brightness(); //if cmd was sent, send = 0
     }
 	}
 }

@@ -17,6 +17,7 @@ extern "C" {
 
 #include "stm32f0xx_hal.h"
 
+typedef enum { false, true } bool;
 
 #define PLC_UART_CYCLE_BUF_LEN 1024
 
