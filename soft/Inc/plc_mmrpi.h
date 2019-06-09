@@ -19,7 +19,7 @@ extern "C" {
 
 #define MY_ADDR_0 0x00
 #define MY_ADDR_1 0x00
-#define MY_ADDR_2 0x02
+#define MY_ADDR_2 0x01
 
 
 #define MY_ID 0x000001
