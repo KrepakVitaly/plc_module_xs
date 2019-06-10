@@ -10,11 +10,6 @@
   
 #include "circular_buffer.h"
   
-uint8_t plc_uart_cycle_buf[PLC_UART_CYCLE_BUF_LEN] = {0};
-uint32_t plc_circular_buf_data_size;
-uint32_t plc_circular_buf_start;
-uint32_t plc_circular_buf_end;
-
 
 uint8_t CircularBuffer_Init(CircularBuffer_Typedef* buf)
 {
@@ -107,41 +102,40 @@ uint8_t CircularBuffer_Put_OW(CircularBuffer_Typedef* buf, uint8_t val)
 //  }
 //}
 
-//uint8_t CircularBuffer_RemoveFirstValue(CircularBuffer_Typedef* buf)
-//{
-//  
-//  if (CircularBuffer_IsEmpty(buf))
-//    return CIRC_BUFFER_ERR;
-//  else
-//  {
-//    buf->size--;
-//    buf->data[buf->head] = 0;
-//  
-//    //if tail is in the end of array
-//    if (buf->head == PLC_UART_CYCLE_BUF_LEN - 1)
-//      buf->head = 0;
-//    else
-//      buf->head++;
+uint8_t CircularBuffer_RemoveFirstValue(CircularBuffer_Typedef* buf)
+{
+  
+  if (CircularBuffer_IsEmpty(buf))
+    return CIRC_BUFFER_ERR;
+  else
+  {
+    buf->size--;
+    buf->data[buf->head] = 0;
+  
+    //if tail is in the end of array
+    if (buf->head == PLC_UART_CYCLE_BUF_LEN - 1)
+      buf->head = 0;
+    else
+      buf->head++;
 
-//    return CIRC_BUFFER_OK;
-//  }
+    return CIRC_BUFFER_OK;
+  }
+}
 
-//}
-
-//uint8_t CircularBuffer_RemoveFirstNValues(CircularBuffer_Typedef* buf, uint16_t num)
-//{
-//  if (num > buf->size)
-//    return CIRC_BUFFER_ERR;
-//  
-//  for(uint16_t i = 0; i < num; i++)
-//  {
-//    if(CircularBuffer_RemoveFirstValue(buf) != CIRC_BUFFER_ERR)
-//      continue;
-//    else
-//      return CIRC_BUFFER_ERR;
-//  }
-//  return CIRC_BUFFER_OK;
-//}
+uint8_t CircularBuffer_RemoveFirstNValues(CircularBuffer_Typedef* buf, uint16_t num)
+{
+  if (num > buf->size)
+    return CIRC_BUFFER_ERR;
+  
+  for(uint16_t i = 0; i < num; i++)
+  {
+    if(CircularBuffer_RemoveFirstValue(buf) != CIRC_BUFFER_ERR)
+      continue;
+    else
+      return CIRC_BUFFER_ERR;
+  }
+  return CIRC_BUFFER_OK;
+}
 
 //uint8_t CircularBuffer_RemoveLastNValues(CircularBuffer_Typedef* buf, uint16_t num)
 //{
@@ -177,6 +171,34 @@ uint16_t CircularBuffer_GetLength(CircularBuffer_Typedef* buf)
 //  }
 //}
 
+uint8_t CircularBuffer_GetRandValue(CircularBuffer_Typedef* buf, uint16_t idx)
+{
+  if (idx >= buf->size)
+    return 0;
+  
+  if (buf->head + idx < buf->max_size)
+    return buf->data[buf->head + idx];
+  else
+    return buf->data[buf->max_size - (buf->head + idx)];
+}
+
+//uint8_t CircularBuffer_GetRandValue(CircularBuffer_Typedef* buf, uint8_t * result, uint16_t idx)
+//{
+//  if (idx >= buf->size)
+//    return CIRC_BUFFER_ERR;
+//  
+//  if (buf->head + idx < buf->max_size)
+//  {
+//    *result = buf->data[buf->head + idx];
+//  }
+//  else
+//  {
+//    *result = buf->data[buf->max_size - (buf->head + idx)];
+//  }
+
+//  return CIRC_BUFFER_OK;
+//}
+
 uint16_t CircularBuffer_GetLastNValues(CircularBuffer_Typedef* buf, uint8_t * result, uint16_t num)
 {
   if (num > buf->size)
@@ -196,23 +218,23 @@ uint16_t CircularBuffer_GetLastNValues(CircularBuffer_Typedef* buf, uint8_t * re
   return CIRC_BUFFER_OK;
 }
 
-//bool CircularBuffer_IsEmpty(CircularBuffer_Typedef* buf)
-//{
-//  if (buf->head == buf->tail && buf->size == 0)
-//    return true;
-//  else
-//    return false;
-//}
+Bool CircularBuffer_IsEmpty(CircularBuffer_Typedef* buf)
+{
+  if (buf->head == buf->tail && buf->size == 0)
+    return True;
+  else
+    return False;
+}
 
-bool CircularBuffer_IsFull(CircularBuffer_Typedef* buf)
+Bool CircularBuffer_IsFull(CircularBuffer_Typedef* buf)
 {
   //if circular buffer is not full
   if (buf->size < buf->max_size - 1)
   {
-    return false;
+    return False;
   }
   else //if circular buffer is full
   {
-    return true;
+    return True;
   }
 }

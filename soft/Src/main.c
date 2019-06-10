@@ -221,8 +221,8 @@ int main(void)
         {
           //HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
           dali_cmd = 0x01FE00 + packet_buffer[8]; // byte No8
-          plc_uart_answer_ok[7] =  0x00; //status ok
-          plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
+          //plc_uart_answer_ok[7] =  0x00; //status ok
+          //plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
         }
       }
       else //if packet was not found, clear the previous byte
