@@ -19,14 +19,9 @@ extern "C" {
 
 typedef enum { false, true } bool;
 
-#define PLC_UART_CYCLE_BUF_LEN 1024
+#define PLC_UART_CYCLE_BUF_LEN 32
 #define CIRC_BUFFER_OK 0
 #define CIRC_BUFFER_ERR 1
-
-extern uint8_t plc_uart_cycle_buf[PLC_UART_CYCLE_BUF_LEN];
-extern uint32_t plc_circular_buf_data_size;
-extern uint32_t plc_circular_buf_start;
-extern uint32_t plc_circular_buf_end;
 
 typedef struct
 {
@@ -51,6 +46,8 @@ uint8_t CircularBuffer_RemoveLastNValues(CircularBuffer_Typedef* buf,
                                          uint16_t num);
 uint8_t CircularBuffer_GetLastValue(CircularBuffer_Typedef* buf, 
                                      uint8_t * result);
+uint16_t CircularBuffer_GetLastNValues(CircularBuffer_Typedef* buf, 
+                                       uint8_t * result, uint16_t num);
 uint8_t CircularBuffer_RemoveFirstValue(CircularBuffer_Typedef* buf);
 uint8_t CircularBuffer_RemoveFirstNValues(CircularBuffer_Typedef* buf, 
                                           uint16_t num);
