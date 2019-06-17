@@ -75,7 +75,7 @@
 /* USER CODE BEGIN PV */
 int send;
 CircularBuffer_Typedef kq130_buf;
-
+uint8_t packet_analyze_buf[PACKET_SIZE];
 uint8_t new_byte_received = 0;
 
 uint8_t last_command = 0;
@@ -170,65 +170,74 @@ int main(void)
     
     // if there is a chance to contain full packet plc_circular_buf_data_size
     // must be greater or equal than PACKET_SIZE
-    if (new_byte_received && CircularBuffer_GetLength(&kq130_buf) >= PACKET_SIZE) 
+    uint16_t len = CircularBuffer_GetLength(&kq130_buf);
+    
+    if (new_byte_received && len >= PACKET_SIZE) 
     {
-      CircularBuffer_GetLastNValues(&kq130_buf, packet_buffer, PACKET_SIZE);
       new_byte_received = 0;
-      
-      // try to find head of packet
-      //if packet was found
-      if ( packet_buffer[1] == 0x56 && // byte No1
-           packet_buffer[2] == 0x12 && // byte No2
-           packet_buffer[3] == 0x54  ) // byte No3
+      CircularBuffer_GetLastNValues(&kq130_buf, packet_analyze_buf, PACKET_SIZE);
+      //for (int i = 0; i < len - PACKET_SIZE + 1; i++) 
       {
-        //if address is valid
-        if ( packet_buffer[4] == MY_ADDR_0 && //bytes No 4-6 
-             packet_buffer[5] == MY_ADDR_1 &&
-             packet_buffer[6] == MY_ADDR_2 )
+        //for (uint8_t j = 0; j < PACKET_SIZE; j++)
+        //  packet_analyze_buf[j] = CircularBuffer_GetRandValue(&kq130_buf, j); 
+        
+        // try to find head of packet
+        //if packet was found
+        if ( packet_analyze_buf[1] == 0x56 && // byte No1
+             packet_analyze_buf[2] == 0x12 && // byte No2
+             packet_analyze_buf[3] == 0x54  ) // byte No3
         {
-          //if set brightness command
-          if (packet_buffer[7] == 0x01) // byte No7
-            dali_cmd = 0x01FE00 + packet_buffer[8]; // byte No8
+          //if address is valid
+          if ( packet_analyze_buf[4] == MY_ADDR_0 && //bytes No 4-6 
+               packet_analyze_buf[5] == MY_ADDR_1 &&
+               packet_analyze_buf[6] == MY_ADDR_2 )
+          {
+            //if set brightness command
+            if (packet_analyze_buf[7] == 0x01) // byte No7
+              dali_cmd = 0x01FE00 + packet_analyze_buf[8]; // byte No8
+            
+            plc_uart_answer_ok[4] = MY_ADDR_0;
+            plc_uart_answer_ok[5] = MY_ADDR_1;
+            plc_uart_answer_ok[6] = MY_ADDR_2;
+            plc_uart_answer_ok[7] =  0x01; //status ok
+            plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
+             while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, PACKET_SIZE, 10) != HAL_OK);
+            CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
+            //break;
+          }
+        }
+        //TODO: add byte 0x0D which shows the end of packet and silence time of 2s
+        //if broadcast packet was found
+        else if ( packet_analyze_buf[1] == 0x32 && // byte No1
+                  packet_analyze_buf[2] == 0x02 && // byte No2
+                  packet_analyze_buf[3] == 0x77  ) // byte No3
+        {
+          dali_cmd = 0x01FE00 + packet_analyze_buf[8]; // byte No8
+          CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
+          //break;
+        }
+        //if multicast packet was found
+        else if ( packet_analyze_buf[1] == 0x19 && // byte No1
+                  packet_analyze_buf[2] == 0xB3 && // byte No2
+                  packet_analyze_buf[3] == 0xEE  ) // byte No3
+        {
+          uint32_t packet_address = (packet_analyze_buf[4] << 16) + //bytes No 4-6 
+                                    (packet_analyze_buf[5] << 8) + 
+                                     packet_analyze_buf[6];
           
-          plc_uart_answer_ok[4] = MY_ADDR_0;
-          plc_uart_answer_ok[5] = MY_ADDR_1;
-          plc_uart_answer_ok[6] = MY_ADDR_2;
-          plc_uart_answer_ok[7] =  0x01; //status ok
-          plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
-          while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, PACKET_SIZE, 100) != HAL_OK);
+          uint16_t offset = packet_analyze_buf[7];  // byte No7
+          
+          if ( my_address >= packet_address && my_address <= (packet_address + offset))
+            dali_cmd = 0x01FE00 + packet_analyze_buf[8]; // byte No8
+          
+          CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
+          //break;
         }
-      }
-      //TODO: add byte 0x0D which shows the end of packet and silence time of 2s
-      //if broadcast packet was found
-      else if ( packet_buffer[1] == 0x32 && // byte No1
-                packet_buffer[2] == 0x02 && // byte No2
-                packet_buffer[3] == 0x77  ) // byte No3
-      {
-        dali_cmd = 0x01FE00 + packet_buffer[8]; // byte No8
-      }
-      //if multicast packet was found
-      else if ( packet_buffer[1] == 0x19 && // byte No1
-                packet_buffer[2] == 0xB3 && // byte No2
-                packet_buffer[3] == 0xEE  ) // byte No3
-      {
-        uint32_t packet_address = (packet_buffer[4] << 16) + //bytes No 4-6 
-                                 (packet_buffer[5] << 8) + 
-                                  packet_buffer[6];
-        
-        uint16_t offset = packet_buffer[7];  // byte No7
-        
-        if ( my_address >= packet_address && my_address <= (packet_address + offset))
+        else //if packet was not found, clear the previous byte
         {
-          //HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-          dali_cmd = 0x01FE00 + packet_buffer[8]; // byte No8
-          //plc_uart_answer_ok[7] =  0x00; //status ok
-          //plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
+          //CircularBuffer_RemoveFirstValue(&kq130_buf);
         }
-      }
-      else //if packet was not found, clear the previous byte
-      {
-
-      }
+     }
     }
   }
   /* USER CODE END 3 */

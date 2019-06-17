@@ -82,25 +82,25 @@ uint8_t CircularBuffer_Put_OW(CircularBuffer_Typedef* buf, uint8_t val)
 //}
 
 
-//uint8_t CircularBuffer_RemoveLastValue(CircularBuffer_Typedef* buf)
-//{
-//  if (CircularBuffer_IsEmpty(buf))
-//    return CIRC_BUFFER_ERR;
-//  else
-//  {
-//    buf->size--;
-//  
-//    //if tail is in the end of array
-//    if (buf->tail == 0)
-//      buf->tail = PLC_UART_CYCLE_BUF_LEN - 1;
-//    else
-//      buf->tail--;
+uint8_t CircularBuffer_RemoveLastValue(CircularBuffer_Typedef* buf)
+{
+  if (CircularBuffer_IsEmpty(buf))
+    return CIRC_BUFFER_ERR;
+  else
+  {
+    buf->size--;
+  
+    //if tail is in the end of array
+    if (buf->tail == 0)
+      buf->tail = PLC_UART_CYCLE_BUF_LEN - 1;
+    else
+      buf->tail--;
 
-//    buf->data[buf->tail] = 0;
-//    
-//    return CIRC_BUFFER_OK;
-//  }
-//}
+    buf->data[buf->tail] = 0;
+    
+    return CIRC_BUFFER_OK;
+  }
+}
 
 uint8_t CircularBuffer_RemoveFirstValue(CircularBuffer_Typedef* buf)
 {
@@ -137,20 +137,20 @@ uint8_t CircularBuffer_RemoveFirstNValues(CircularBuffer_Typedef* buf, uint16_t 
   return CIRC_BUFFER_OK;
 }
 
-//uint8_t CircularBuffer_RemoveLastNValues(CircularBuffer_Typedef* buf, uint16_t num)
-//{
-//  if (num > buf->size)
-//    return CIRC_BUFFER_ERR;
-//  
-//  for(uint16_t i = 0; i < num; i++)
-//  {
-//    if(CircularBuffer_RemoveLastValue(buf) != CIRC_BUFFER_ERR)
-//      continue;
-//    else
-//      return CIRC_BUFFER_ERR;
-//  }
-//  return CIRC_BUFFER_OK;
-//}
+uint8_t CircularBuffer_RemoveLastNValues(CircularBuffer_Typedef* buf, uint16_t num)
+{
+  if (num > buf->size)
+    return CIRC_BUFFER_ERR;
+  
+  for(uint16_t i = 0; i < num; i++)
+  {
+    if(CircularBuffer_RemoveLastValue(buf) != CIRC_BUFFER_ERR)
+      continue;
+    else
+      return CIRC_BUFFER_ERR;
+  }
+  return CIRC_BUFFER_OK;
+}
 
 uint16_t CircularBuffer_GetLength(CircularBuffer_Typedef* buf)
 {
