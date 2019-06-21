@@ -7,6 +7,9 @@
  * Published on http://techoverflow.net
  * Licensed under CC0 (public domain):
  * https://creativecommons.org/publicdomain/zero/1.0/
+ * http://blog.gorski.pm/stm32-unique-id
+ * https://stackoverflow.com/questions/29323699/how-to-find-the-device-id-of-a-stm32f103ret
+ * https://gist.github.com/ElectronicaXAB3
  */
 #ifndef __UUID_H
 #define __UUID_H
@@ -17,7 +20,12 @@
  * Use like this: STM32_UUID[0], STM32_UUID[1], STM32_UUID[2]
  */
 #define STM32_UUID ((uint32_t *)0x1FFFF7AC)
-
+//struct Uid {
+//    uint16_t X;  // x-coordinate
+//    uint16_t Y;  // y-coordinate
+//    uint8_t WAF;  // Wafer number
+//    char LOT[7];  // Lot number
+//};
 
 void foobar(); 
 

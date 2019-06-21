@@ -47,6 +47,7 @@
 #include "dali_interface_lib.h"
 #include "circular_buffer.h"
 #include "plc_mmrpi.h"
+#include "stm32_uid.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -147,10 +148,7 @@ int main(void)
   
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-  
-  uint8_t packet_buffer[PACKET_SIZE];
-  for(uint16_t i = 0; i < PACKET_SIZE; i++)
-    packet_buffer[i] = 0;
+    
   /* USER CODE END 2 */
 
   /* Infinite loop */
