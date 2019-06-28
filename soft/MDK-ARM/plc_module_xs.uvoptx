@@ -153,22 +153,22 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>idPart1</ItemText>
+          <ItemText>new_byte_received</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>idPart2</ItemText>
+          <ItemText>kq130_buf</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>idPart3</ItemText>
+          <ItemText>packet_analyze_buf</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>plc_uart_cycle_buf[plc_circular_buf_start + i + 6]</ItemText>
+          <ItemText>len</ItemText>
         </Ww>
         <Ww>
           <count>4</count>

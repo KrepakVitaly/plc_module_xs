@@ -179,7 +179,7 @@ uint8_t CircularBuffer_GetRandValue(CircularBuffer_Typedef* buf, uint16_t idx)
   if (buf->head + idx < buf->max_size)
     return buf->data[buf->head + idx];
   else
-    return buf->data[buf->max_size - (buf->head + idx)];
+    return buf->data[(buf->head + idx) - buf->max_size];
 }
 
 //uint8_t CircularBuffer_GetRandValue(CircularBuffer_Typedef* buf, uint8_t * result, uint16_t idx)
@@ -206,7 +206,7 @@ uint16_t CircularBuffer_GetLastNValues(CircularBuffer_Typedef* buf, uint8_t * re
   
   for(uint16_t i = 1; i <= num; i++)
   {
-    if (buf->tail - i > 0)
+    if (buf->tail >= i)
     {
       result[num-i] = buf->data[buf->tail - i];
     }

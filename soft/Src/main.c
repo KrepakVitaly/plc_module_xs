@@ -199,7 +199,7 @@ int main(void)
             plc_uart_answer_ok[6] = MY_ADDR_2;
             plc_uart_answer_ok[7] =  0x01; //status ok
             plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
-             while (HAL_UART_Transmit(&huart1, plc_uart_answer_ok, PACKET_SIZE, 10) != HAL_OK);
+            HAL_UART_Transmit(&huart1, plc_uart_answer_ok, PACKET_SIZE, 10);
             CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
             //break;
           }
