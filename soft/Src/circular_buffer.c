@@ -195,7 +195,7 @@ uint8_t CircularBuffer_GetRandValue(CircularBuffer_Typedef* buf, uint16_t idx)
 //  {
 //    *result = buf->data[buf->max_size - (buf->head + idx)];
 //  }
-
+//
 //  return CIRC_BUFFER_OK;
 //}
 
