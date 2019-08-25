@@ -103,6 +103,14 @@ uint16_t dist (uint16_t head, uint16_t tail, uint16_t module)
 }
 /* USER CODE END PFP */
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+void delayUS(uint32_t us) {
+	volatile uint32_t counter = 1*us;
+	while(counter--);
+}
+#pragma GCC pop_options
+
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
@@ -160,6 +168,8 @@ int main(void)
   HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
     
+  int pwmetor = 0;
+  int delay = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -169,6 +179,30 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    while (1)
+    {
+      pwmetor++;
+      
+      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_SET);
+      delayUS(delay);
+      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
+      delayUS((100-delay));
+      
+      if (pwmetor >= 5000)
+      {
+        delay+= 1;
+        pwmetor = 0;
+      }
+      
+      if (delay >= 100)
+      {
+        delay = 0;
+        HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
+        HAL_Delay(4000);
+      }
+    }
+    
+    
     
     //Receive 1 byte from KQ130F
     //if (new_byte_received == 0)
