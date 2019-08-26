@@ -78,15 +78,19 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define PLC_MODE_Pin GPIO_PIN_1
+#define PLC_MODE_GPIO_Port GPIOA
 #define PLC_RESET_Pin GPIO_PIN_2
 #define PLC_RESET_GPIO_Port GPIOA
 #define DALI_TX_Pin GPIO_PIN_3
 #define DALI_TX_GPIO_Port GPIOA
 #define DALI_RX_Pin GPIO_PIN_4
 #define DALI_RX_GPIO_Port GPIOA
+#define LED_2_Pin GPIO_PIN_7
+#define LED_2_GPIO_Port GPIOA
 #define LED_Pin GPIO_PIN_1
 #define LED_GPIO_Port GPIOB
-/* USER CODE BEGIN Private defines */              
+/* USER CODE BEGIN Private defines */
 
 
 
