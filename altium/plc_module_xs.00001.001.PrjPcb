@@ -293,22 +293,26 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=KSHJJICO
 
-[Document16]
-DocumentPath=CAMtastic1.Cam
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=
+[ProjectVariant1]
+UniqueID=4CC723E3-7139-4C40-8D77-DE326C1C0A4B
+Description=Rev1.2_Very_simple_KCHR_ALIBERD
+AllowFabrication=0
+ParameterCount=0
+VariationCount=13
+Variation1=Designator=VT2|UniqueId=\TASDLARE\FFRACHMA|Kind=1|AlternatePart= 
+Variation2=Designator=DD3|UniqueId=\JVADTAKP\KACWLPVO|Kind=1|AlternatePart= 
+Variation3=Designator=DA4|UniqueId=\JVADTAKP\HFIAJRLG|Kind=1|AlternatePart= 
+Variation4=Designator=DD2|UniqueId=\JVADTAKP\XRMFMFWR|Kind=1|AlternatePart= 
+Variation5=Designator=R11|UniqueId=\TASDLARE\CQLVVKLA|Kind=1|AlternatePart= 
+Variation6=Designator=R7|UniqueId=\ODMYRGPI\EPDQIGQS|Kind=1|AlternatePart= 
+Variation7=Designator=R2|UniqueId=\ODMYRGPI\MFSMVUCF|Kind=0|AlternatePart= 
+Variation8=Designator=DD5|UniqueId=\THQADTSU\GBNYEWRK|Kind=1|AlternatePart= 
+Variation9=Designator=R23|UniqueId=\THQADTSU\YPHTOLOY|Kind=1|AlternatePart= 
+Variation10=Designator=HL2|UniqueId=\THQADTSU\WAUTTGRQ|Kind=1|AlternatePart= 
+Variation11=Designator=R1|UniqueId=\ODMYRGPI\RYKALNVM|Kind=1|AlternatePart= 
+Variation12=Designator=C12|UniqueId=\JVADTAKP\VTVLGOLR|Kind=1|AlternatePart= 
+Variation13=Designator=C14|UniqueId=\JVADTAKP\QGIQQLNA|Kind=1|AlternatePart= 
+ParamVariationCount=0
 
 [GeneratedDocument1]
 DocumentPath=_Outputs\Design Rule Check - plc_module_xs.00001.html
@@ -435,7 +439,7 @@ AddNetNetLabels=-1
 AddNetPorts=-1
 ShowComponentParameters=0
 GlobalBookmarks=0
-ExportBOM=-1
+ExportBOM=0
 TemplateFilename=спецификация.xlt
 TemplateStoreRelative=-1
 PCB_PrintColor=1
@@ -449,7 +453,7 @@ SCH_NoERCSymbolsToShow="Thin Cross","Thick Cross","Small Cross",Checkbox,Triangl
 SCH_ShowNote=0
 SCH_ShowNoteCollapsed=-1
 SCH_ExpandLogicalToPhysical=-1
-SCH_VariantName=[No Variations]
+SCH_VariantName=Rev1.2_Very_simple_KCHR_ALIBERD
 SCH_ExpandComponentDesignators=-1
 SCH_ExpandNetlabels=0
 SCH_ExpandPorts=0
