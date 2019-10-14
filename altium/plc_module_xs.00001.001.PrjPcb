@@ -305,13 +305,13 @@ Variation3=Designator=DA4|UniqueId=\JVADTAKP\HFIAJRLG|Kind=1|AlternatePart=
 Variation4=Designator=DD2|UniqueId=\JVADTAKP\XRMFMFWR|Kind=1|AlternatePart= 
 Variation5=Designator=R11|UniqueId=\TASDLARE\CQLVVKLA|Kind=1|AlternatePart= 
 Variation6=Designator=R7|UniqueId=\ODMYRGPI\EPDQIGQS|Kind=1|AlternatePart= 
-Variation7=Designator=R2|UniqueId=\ODMYRGPI\MFSMVUCF|Kind=0|AlternatePart= 
-Variation8=Designator=DD5|UniqueId=\THQADTSU\GBNYEWRK|Kind=1|AlternatePart= 
-Variation9=Designator=R23|UniqueId=\THQADTSU\YPHTOLOY|Kind=1|AlternatePart= 
-Variation10=Designator=HL2|UniqueId=\THQADTSU\WAUTTGRQ|Kind=1|AlternatePart= 
-Variation11=Designator=R1|UniqueId=\ODMYRGPI\RYKALNVM|Kind=1|AlternatePart= 
-Variation12=Designator=C12|UniqueId=\JVADTAKP\VTVLGOLR|Kind=1|AlternatePart= 
-Variation13=Designator=C14|UniqueId=\JVADTAKP\QGIQQLNA|Kind=1|AlternatePart= 
+Variation7=Designator=DD5|UniqueId=\THQADTSU\GBNYEWRK|Kind=1|AlternatePart= 
+Variation8=Designator=R23|UniqueId=\THQADTSU\YPHTOLOY|Kind=1|AlternatePart= 
+Variation9=Designator=HL2|UniqueId=\THQADTSU\WAUTTGRQ|Kind=1|AlternatePart= 
+Variation10=Designator=R1|UniqueId=\ODMYRGPI\RYKALNVM|Kind=1|AlternatePart= 
+Variation11=Designator=C12|UniqueId=\JVADTAKP\VTVLGOLR|Kind=1|AlternatePart= 
+Variation12=Designator=C14|UniqueId=\JVADTAKP\QGIQQLNA|Kind=1|AlternatePart= 
+Variation13=Designator=XP3|UniqueId=\THQADTSU\WARIAWVE|Kind=1|AlternatePart= 
 ParamVariationCount=0
 
 [GeneratedDocument1]
@@ -390,6 +390,14 @@ DItemRevisionGUID=
 DocumentPath=_Outputs\plc_module_xs.00001.001.RUL
 DItemRevisionGUID=
 
+[GeneratedDocument20]
+DocumentPath=_Outputs\plc_module_xs.00001.001.xls
+DItemRevisionGUID=
+
+[GeneratedDocument21]
+DocumentPath=_Outputs\plc_module_xs.00001.001_3
+DItemRevisionGUID=
+
 [Parameter1]
 Name=GlobalOrganizationName
 Value=TheGreenLight
@@ -431,7 +439,7 @@ AutoOpenFile=-1
 AutoOpenOutJob=0
 
 [Generic_SmartPDFSettings]
-ProjectMode=0
+ProjectMode=-1
 ZoomPrecision=50
 AddNetsInformation=0
 AddNetPins=-1
@@ -1354,13 +1362,17 @@ Configuration4_Item1=CaptionAsName
 Configuration4_Name2=Filter
 Configuration4_Item2=545046300E5446696C74657257726170706572000D46696C7465722E416374697665090F46696C7465722E43726974657269610A04000000000000000000
 Configuration4_Name3=General
-Configuration4_Item3=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=False|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=|BatchMode=5|FormWidth=1237|FormHeight=661|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>
+Configuration4_Item3=OpenExported=True|AddToProject=True|ForceFit=False|NotFitted=True|Database=False|DatabasePriority=False|IncludePCBData=False|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=|BatchMode=5|FormWidth=1237|FormHeight=660|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>
 Configuration4_Name4=GroupOrder
-Configuration4_Item4=Part Number=True|LibRef=True
-Configuration4_Name5=SortOrder
-Configuration4_Item5=Designator=Up
-Configuration4_Name6=VisibleOrder
-Configuration4_Item6=LibRef=214|Comment=85|Footprint=154|Quantity=85|Value=85|Description=85|Designator=85
+Configuration4_Item4=Fitted=True|LibRef=True
+Configuration4_Name5=PCBDocument
+Configuration4_Item5=FileName=plc_module_xs.00001.001.PcbDoc
+Configuration4_Name6=PCBDocument2
+Configuration4_Item6=FileName=[PCB Document 1]
+Configuration4_Name7=SortOrder
+Configuration4_Item7=Designator=Up
+Configuration4_Name8=VisibleOrder
+Configuration4_Item8=LibRef=206|Part Number=180|Comment=124|Footprint=157|Quantity=56|Value=56|Description=56|Designator=56|Fitted=67
 OutputType5=ComponentCrossReference
 OutputName5=Component Cross Reference Report
 OutputDocumentPath5=
