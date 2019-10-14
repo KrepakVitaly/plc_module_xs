@@ -18,9 +18,9 @@ extern "C" {
 
 #include "stm32f0xx_hal.h"
 
-#define MY_ADDR_0 0xFF
-#define MY_ADDR_1 0x0B
-#define MY_ADDR_2 0x7A
+#define MY_ADDR_0 0x00
+#define MY_ADDR_1 0x00
+#define MY_ADDR_2 0x02
 
 
 

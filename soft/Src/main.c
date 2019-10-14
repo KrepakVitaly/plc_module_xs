@@ -131,7 +131,7 @@ int main(void)
   
 
   /* MCU Configuration--------------------------------------------------------*/
-
+ 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -179,28 +179,28 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    while (1)
-    {
-      pwmetor++;
-      
-      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_SET);
-      delayUS(delay);
-      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
-      delayUS((100-delay));
-      
-      if (pwmetor >= 5000)
-      {
-        delay+= 1;
-        pwmetor = 0;
-      }
-      
-      if (delay >= 100)
-      {
-        delay = 0;
-        HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
-        HAL_Delay(4000);
-      }
-    }
+//    while (1)
+//    {
+//      pwmetor++;
+//      
+//      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_SET);
+//      delayUS(delay);
+//      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
+//      delayUS((100-delay));
+//      
+//      if (pwmetor >= 5000)
+//      {
+//        delay+= 1;
+//        pwmetor = 0;
+//      }
+//      
+//      if (delay >= 100)
+//      {
+//        delay = 0;
+//        HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
+//        HAL_Delay(4000);
+//      }
+//    }
     
     
     
@@ -230,6 +230,7 @@ int main(void)
              packet_analyze_buf[2] == 0x12 && // byte No2
              packet_analyze_buf[3] == 0x54  ) // byte No3
         {
+          HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
           //if address is valid
           if ( packet_analyze_buf[4] == MY_ADDR_0 && //bytes No 4-6 
                packet_analyze_buf[5] == MY_ADDR_1 &&
@@ -244,6 +245,7 @@ int main(void)
             plc_uart_answer_ok[6] = MY_ADDR_2;
             plc_uart_answer_ok[7] =  0x01; //status ok
             plc_uart_answer_ok[8] =  dali_cmd & 0xFF; //level
+            
             HAL_UART_Transmit(&huart1, plc_uart_answer_ok, PACKET_SIZE, 10);
             CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
             //break;
