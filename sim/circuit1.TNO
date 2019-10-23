@@ -1,0 +1,179 @@
+********************************************************************************
+***                            Micro-Cap 9.0.6.1                             ***
+***                                                                          ***
+***                                                                          ***
+***                      Transient Analysis of circuit1                      ***
+********************************************************************************
+Limits
+======
+Time Range           100u
+Maximum Time Step    100p
+Number of Points     51
+Temperature          Linear 27
+Run Options          Normal
+State Variables      Zero
+Operating Point      On
+Operating Point Only Off
+
+
+*****************************************************
+***                Temperature=27                 ***
+*****************************************************
+
+Temperature=27 
+
+Model parameters for devices of type Bipolar Junction Transistors NPN
+=====================================================================
+Instance:              Q1   
+Using model:        BC847   
+LEVEL                   1(*)
+AF                 1.000 (*)
+BF               324.400    
+BR                 8.290    
+CJC                3.347p   
+CJE               12.440p   
+CJS                0.000    
+EG                 1.110    
+FC               979.000m   
+IKF              109.000m   
+IKR               90.000m   
+IRB                5.000u   
+IS                18.220f   
+ISC                9.982p   
+ISE                0.289f   
+ISS                0.000 (*)
+ITF              313.100m   
+KF                 0.000 (*)
+MJC              391.000m   
+MJE              365.600m   
+MJS              333.000m   
+NC                 1.763    
+NE                 1.400    
+NF               993.200m   
+NK               500.000m(*)
+NR               993.100m   
+NS                 1.000 (*)
+PTF                0.000    
+RB                10.000    
+RBM                5.000    
+RC               701.400m   
+RE               649.000m   
+T_ABS           UNDEFINED(*)
+T_MEASURED      UNDEFINED(*)
+T_REL_GLOBAL    UNDEFINED(*)
+T_REL_LOCAL     UNDEFINED(*)
+TF               490.800p   
+TR                90.000n   
+TRB1               0.000 (*)
+TRB2               0.000 (*)
+TRC1               0.000 (*)
+TRC2               0.000 (*)
+TRE1               0.000 (*)
+TRE2               0.000 (*)
+TRM1               0.000 (*)
+TRM2               0.000 (*)
+VAF               82.000    
+VAR               17.900    
+VJC              546.300m   
+VJE              757.900m   
+VJS              750.000m   
+VTF                2.927    
+XCJC             619.300m   
+XTB                0.000    
+XTF                9.510    
+XTI                3.000    
+(*) Default Parameter
+
+
+
+DC Operating Point Voltages
+===========================
+Node         Voltage  Node         Voltage  Node         Voltage 
+1             5.000   2           142.929p  3             5.000  
+4             0.000   5             5.000  
+
+DC Operating Point Inductor Current
+===================================
+Inductor     Current 
+L1          -15.911p 
+
+
+Operating point for devices of type Bipolar Junction Transistors NPN
+====================================================================
+Instance:                 Q1
+Using model:           BC847
+IB                  -10.587p
+IC                   15.912p
+VBE                 142.929p
+VBC                  -5.000 
+VCE                   5.000 
+BETADC               -1.503 
+GM                  410.975f
+RPI                  75.407T
+RX                   10.000 
+RO                  891.128G
+CPI                  12.440p
+CMU                 837.504f
+CBX                 514.836f
+CJS                   0.000 
+BETAAC               30.990 
+FT                    4.742m
+
+DC Power Terms:
+PD                   79.558p
+PS                    0.000 
+
+DC Pin Currents:
+Ib                  -10.587p
+Ic                   15.912p
+Ie                   -5.324p
+Is                    0.000 
+
+Condition:
+State                    OFF
+
+
+
+Operating point for devices of type Resistor
+============================================
+Instance:                  R1              R2              R3
+DC Power Terms:
+PD                 7.566E-022      7.566E-022        925.926m
+
+DC Pin Currents:
+Ir                    -5.294p          5.294p        185.185m
+
+
+
+Operating point for devices of type Inductor
+============================================
+Instance:                  L1
+DC Power Terms:
+PS                     0.000 
+
+DC Pin Currents:
+Il                   -15.911p
+
+
+
+Operating point for devices of type Capacitor
+=============================================
+Instance:                  C1
+DC Power Terms:
+PS                     0.000 
+
+DC Pin Currents:
+Ic                     0.000 
+
+
+
+Operating point for devices of type SPICE Source
+================================================
+Instance:                 V1              V3              V4
+DC Power Terms:
+PG                   79.557p        925.926m          0.000 
+
+DC Pin Currents:
+ISource             -15.911p       -185.185m        185.185m
+
+

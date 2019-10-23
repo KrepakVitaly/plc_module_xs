@@ -5,8 +5,8 @@ Program=Micro-Cap
 Screen=1920,1080
 MCAPVersion=9.0.6.1
 Key ID=2 233 293 684
-NLCnt=15
-TXCnt=0
+NLCnt=45
+TXCnt=2
 
 [shapedef]
 Name=Battery
@@ -15,6 +15,10 @@ Line=22,-3,22,3
 Line=26,-7,26,7
 Line=26,0,48,0
 Current=32,8,16,8
+
+[shapedef]
+Name=SPICE_V
+Root="Vsource.root",0,-12,0
 
 [shapedef]
 Name=Resistor
@@ -34,6 +38,56 @@ PolyLine=48,0
 Current=32,8,16,8
 
 [shapedef]
+Name=Capacitor
+Line=0,0,22,0
+Line=22,-8,22,8
+Line=26,-8,26,8
+Line=26,0,48,0
+Current=32,12,16,12
+
+[shapedef]
+Name=Inductor
+Line=42,0,48,0
+Line=0,0,5,0
+Arc=5,-7,17,7 , 11,-7,5,0
+Arc=13,-7,25,7 , 19,-7,13,0
+Arc=29,-7,41,7 , 35,-7,29,0
+Arc=21,-7,33,7 , 27,-7,21,0
+Arc=6,-7,18,7 , 18,0,12,-7
+Arc=14,-7,26,7 , 26,0,20,-7
+Arc=22,-7,34,7 , 34,0,28,-7
+Arc=30,-7,42,7 , 42,0,36,-7
+Line=11,-7,12,-7
+Line=19,-7,20,-7
+Line=27,-7,28,-7
+Line=35,-7,36,-7
+Arc=13,-4,17,2 , 13,-1,15,2
+Arc=29,-4,33,2 , 29,-1,31,2
+Arc=21,-4,25,2 , 21,-1,23,2
+Arc=14,-4,18,2 , 16,2,18,-1
+Arc=30,-4,34,2 , 32,2,34,-1
+Arc=22,-4,26,2 , 24,2,26,-1
+Line=15,2,16,2
+Line=23,2,24,2
+Line=31,2,32,2
+Line=5,5,9,5
+Line=41,5,41,9
+Line=39,7,43,7
+Current=32,8,16,8
+
+[shapedef]
+Name=Diode
+Root="Diode.root",0,-8,0
+
+[shapedef]
+Name=Schottky
+Arc=18,-13,31,1 , 27,-13,18,-7
+Root="Diode.root",0,-8,0
+Arc=19,-13,30,0 , 27,-13,19,-7
+Arc=8,0,20,13 , 12,13,20,7
+Arc=9,0,19,13 , 12,13,19,7
+
+[shapedef]
 Name=NPN
 Root="Bjt.root",0,-24,0
 PolyClosed=3 ,Solid
@@ -47,6 +101,31 @@ Line=0,0,12,0
 Line=12,-8,12,8
 Line=18,-4,18,4
 Line=24,0,24,0
+
+[shapedef]
+Name=Diode.root
+Line=0,0,20,0
+Line=28,0,48,0
+Rectangle=18,-8,20,8,SOLID
+PolyClosed=3 ,Solid
+PolyLine=20,0
+PolyLine=28,-8
+PolyLine=28,8
+Current=32,16,16,16
+
+[shapedef]
+Name=Vsource.root
+Line=0,0,12,0
+Line=36,0,48,0
+Ellipse=12,-12,36,12
+Line=7,5,7,9
+Root="Plus.root",39,5,0
+Current=32,16,16,16
+
+[shapedef]
+Name=Plus.root
+Line=-2,0,2,0
+Line=0,-2,0,2
 
 [shapedef]
 Name=Bjt.root
@@ -65,38 +144,37 @@ PolyLine=24,12
 PolyLine=14,2
 
 [compdef]
-Name=BC847
-Definition=NPN
-Shape=NPN
-Mask=4224
-memo=NPN General Purpose Transistor 45V .1A .25W
-Label Offset=29,-11,-6,26
-PinCnt=3
-Pin="Collector",3,-3,5,3
-Pin="Base",0,0,-19,-3
-Pin="Emitter",3,3,6,4
-Power=0.25
-
-[compdef]
-Name=Battery
-Definition=Battery
-Shape=Battery
-Mask=5377
-memo=Battery
-Label Offset=19,7,10,13
+Name=Capacitor
+Definition=Capacitor
+Shape=Capacitor
+Mask=7169
+memo=Capacitor
+Label Offset=16,12,12,12
 PinCnt=2
-Pin="Plus",6,0,-4,-5
-Pin="Minus",0,0,-10,-5
+Pin="Plus",6,0,-3,-5
+Pin="Minus",0,0,-14,-5
 
 [compdef]
-Name=Ground
-Definition=Ground
-Shape=Ground
-Mask=1793
-memo=Ground
-Label Offset=0,0,0,0
-PinCnt=1
-Pin="PinA",0,0,-3,-7
+Name=1N5819
+Definition=Diode
+Shape=Schottky
+Mask=4736
+memo=Schottky Barrier Rectifier Vr=40V I0=1A
+Label Offset=18,13,13,20
+PinCnt=2
+Pin="Anode",6,0,-15,-12
+Pin="Cathode",0,0,-22,-12
+
+[compdef]
+Name=Inductor
+Definition=Inductor
+Shape=Inductor
+Mask=7937
+memo=Inductor
+Label Offset=18,9,11,12
+PinCnt=2
+Pin="Plus",6,0,-5,-9
+Pin="Minus",0,0,-3,-9
 
 [compdef]
 Name=Resistor
@@ -108,6 +186,61 @@ Label Offset=18,6,8,11
 PinCnt=2
 Pin="Plus",6,0,-10,-4
 Pin="Minus",0,0,-14,-4
+
+[compdef]
+Name=1N4148
+Definition=Diode
+Shape=Diode
+Mask=6018
+memo=Switching Diode Vr=100V If=200mA
+Label Offset=18,10,12,12
+PinCnt=2
+Pin="Anode",6,0,-13,-8
+Pin="Cathode",0,0,-27,-8
+
+[compdef]
+Name=Ground
+Definition=Ground
+Shape=Ground
+Mask=513
+memo=Ground
+Label Offset=0,0,0,0
+PinCnt=1
+Pin="PinA",0,0,-3,-7
+
+[compdef]
+Name=Battery
+Definition=Battery
+Shape=Battery
+Mask=4097
+memo=Battery
+Label Offset=19,7,10,13
+PinCnt=2
+Pin="Plus",6,0,-4,-5
+Pin="Minus",0,0,-10,-5
+
+[compdef]
+Name=Voltage Source
+Definition=VSpice
+Shape=SPICE_V
+Mask=4864
+memo=Voltage Source
+Label Offset=19,13,15,13
+PinCnt=2
+Pin="Plus",6,0,-5,-6
+Pin="Minus",0,0,-20,-6
+
+[compdef]
+Name=2SD786
+Definition=NPN
+Shape=NPN
+Mask=4224
+memo=NPN
+Label Offset=29,-11,-6,26
+PinCnt=3
+Pin="Collector",3,-3,5,3
+Pin="Base",0,0,-19,-3
+Pin="Emitter",3,3,6,4
 
 [Circuit]
 Window Placement=2,3, -1,-1, -8,-30, 0,0,1065,655
@@ -142,7 +275,7 @@ Digital F Color=#FFFF00
 Digital 1 Color=#FF0000
 Digital X Color=#C0C0C0
 Digital Z Color=#808080
-Window Placement in Transient Analysis=2,3, -1,-1, -8,-30, 25,25,1636,690
+Window Placement in Transient Analysis=2,3, -1,-1, -8,-30, 0,0,1065,655
 SpiceType=AMBIGUOUS
 Block Select Color=#51F998
 TitleBlock Field_1=$name
@@ -155,8 +288,8 @@ Title_Block_Border=False
 Title_Block=False
 Show Nodes=False
 Show Voltages=False
-Show Current=True
-Show Power=True
+Show Current=False
+Show Power=False
 Show Condition=False
 Show Pin Connections=False
 Show Cross=False
@@ -164,116 +297,286 @@ Show Attribute Text=True
 Show Grid Text=True
 
 [Comp]
-Name=BC847
-Grid=66,47
-COff=8,528,376,108,-12
-COff=8,552,400,15,0
-COff=23,528,376,37,-45
+Name=Capacitor
+Grid=96,97
+Rot=3
 
 [Attr]
-ONV=29,-11,PART,Q1
+ONV=-29,-26,PART,C1
 Style=8192
 
 [Attr]
-ONV=29,3,MODEL,BC847
-
-[Attr]
-ONV=29,17,POWER,0.25
-
-[Attr]
-ONV=29,45,PACKAGE,SOT-23
+ONV=-36,-40,CAPACITANCE,47u
+Style=8192
 
 [Comp]
-Name=Battery
-Grid=53,54
-Rot=5
-COff=8,434,405,-69,19
-COff=7,434,391,3,35
+Name=Capacitor
+Grid=103,97
+Rot=3
 
 [Attr]
-ONV=10,-27,PART,V1
+ONV=-29,-26,PART,C2
 Style=8192
 
 [Attr]
-ONV=10,-41,VALUE,3.3
+ONV=-40,-40,CAPACITANCE,4.7u
+Style=8192
+
+[Comp]
+Name=1N5819
+Grid=114,90
+Rot=2
+
+[Attr]
+ONV=-35,-27,PART,D1
+Style=8192
+
+[Attr]
+ONV=-67,-41,MODEL,1N5819
+
+[Attr]
+ONV=-58,-69,PACKAGE,DO-41
+
+[Comp]
+Name=Inductor
+Grid=119,92
+Rot=7
+
+[Attr]
+ONV=-26,12,PART,L1
+Style=8192
+
+[Attr]
+ONV=-35,26,INDUCTANCE,68u
 Style=8192
 
 [Wire]
-Grids=53,47,53,48
+Grids=96,90,96,91
+
+[Wire]
+Grids=96,90,103,90
+
+[Wire]
+Grids=103,90,103,91
+
+[Wire]
+Grids=103,90,108,90
+
+[Wire]
+Grids=114,90,119,90
+
+[Wire]
+Grids=119,90,119,92
 
 [Comp]
-Name=Ground
-Grid=53,54
-Rot=7
-
-[Comp]
-Name=Ground
-Grid=69,50
-Rot=7
-
-[Comp]
-Name=Battery
-Grid=44,49
-Rot=5
+Name=Capacitor
+Grid=126,98
+Rot=3
 
 [Attr]
-ONV=10,-27,PART,V2
+ONV=-29,-26,PART,C3
 Style=8192
 
 [Attr]
-ONV=10,-41,VALUE,3.3
+ONV=-40,-40,CAPACITANCE,39n
 Style=8192
 
-[Comp]
-Name=Ground
-Grid=44,49
-Rot=7
+[Wire]
+Grids=119,98,119,100
 
 [Wire]
-Grids=44,38,44,43
+Grids=119,100,126,100
 
 [Wire]
-Grids=69,38,69,44
+Grids=126,98,126,100
+
+[Wire]
+Grids=119,100,119,102
+
+[Wire]
+Grids=119,90,126,90
+
+[Wire]
+Grids=126,90,126,92
 
 [Comp]
 Name=Resistor
-Grid=59,38
-Rot=6
-COff=7,438,324,-11,-47
+Grid=109,112
+Rot=5
 
 [Attr]
-ONV=-34,6,PART,R1
+ONV=8,-25,PART,R1
 Style=8192
 
 [Attr]
-ONV=-34,20,RESISTANCE,1000
+ONV=8,-39,RESISTANCE,2k
+Style=8192
+
+[Comp]
+Name=1N4148
+Grid=104,106
+Rot=7
+
+[Attr]
+ONV=-29,12,PART,D2
+Style=8192
+
+[Attr]
+ONV=-61,26,MODEL,1N4148
+
+[Attr]
+ONV=-52,54,PACKAGE,DO-35
+
+[Comp]
+Name=Capacitor
+Grid=93,105
+Rot=4
+
+[Attr]
+ONV=16,-26,PART,C4
+Style=8192
+
+[Attr]
+ONV=16,-40,CAPACITANCE,330n
 Style=8192
 
 [Comp]
 Name=Resistor
-Grid=64,47
+Grid=93,105
 Rot=6
-COff=7,478,396,-20,-6
 
 [Attr]
 ONV=-34,6,PART,R2
 Style=8192
 
 [Attr]
-ONV=-34,20,RESISTANCE,0
+ONV=-34,20,RESISTANCE,27
 Style=8192
 
 [Wire]
-Grids=44,38,53,38
+Grids=99,105,104,105
 
 [Wire]
-Grids=59,38,69,38
+Grids=109,105,109,106
 
 [Wire]
-Grids=53,47,58,47
+Grids=109,105,116,105
 
 [Wire]
-Grids=64,47,66,47
+Grids=104,105,104,106
+
+[Wire]
+Grids=104,105,109,105
+
+[Wire]
+Grids=104,112,104,114
+
+[Wire]
+Grids=104,114,109,114
+
+[Wire]
+Grids=109,112,109,114
+
+[Wire]
+Grids=109,114,119,114
+
+[Wire]
+Grids=119,108,119,114
+
+[Comp]
+Name=Ground
+Grid=109,114
+Rot=7
+
+[Comp]
+Name=Ground
+Grid=103,97
+Rot=7
+
+[Comp]
+Name=Ground
+Grid=96,97
+Rot=7
+
+[Comp]
+Name=Battery
+Grid=84,90
+
+[Attr]
+ONV=19,7,PART,V1
+Style=8192
+
+[Attr]
+ONV=19,21,VALUE,5
+
+[Comp]
+Name=Ground
+Grid=84,90
+Rot=2
+
+[Wire]
+Grids=90,90,96,90
+
+[Comp]
+Name=Voltage Source
+Grid=82,114
+Rot=3
+
+[Attr]
+ONV=-31,-27,PART,V2
+Style=8192
+
+[Attr]
+ONV=-300,-41,VALUE,DC 0 AC 1 0 Pulse 0 5 1000n 10n 10n 4000n 10u
+
+[Attr]
+ONV=0,0,Saved_Pulse,DC 0 AC 1 0 Pulse 0 5 1000n 10n 10n 4000n 10u
+Style=256
+
+[Comp]
+Name=Ground
+Grid=82,114
+Rot=7
+
+[Wire]
+Grids=82,105,82,108
+
+[Wire]
+Grids=82,105,86,105
+
+[Wire]
+Grids=119,102,137,102
+
+[Wire]
+Grids=137,102,138,102
+
+[Wire]
+Grids=86,105,87,105
+
+[Comp]
+Name=2SD786
+Grid=116,105
+
+[Attr]
+ONV=29,-11,PART,Q3
+Style=8192
+
+[Attr]
+ONV=29,3,MODEL,MJD50T4
+Style=8192
+
+[Attr]
+ONV=0,0,PACKAGE,TO-18
+
+[Grid Text]
+Text="OUT"
+Grid=137,102
+CBorder=NONE
+
+[Grid Text]
+Text="IN"
+Grid=86,105
+CBorder=NONE
 
 [Schematic]
 CurrentSection 0=0
@@ -283,7 +586,7 @@ CurrentSection 3=0
 Splitter.xs=0
 Splitter.ys=0
 TextQuad=4099
-Scale=0.5
+Scale=0.6666666666666666
 PrinterScale=1
 GridUser=10
 ShapeGroups="Main","Euro","DeMorgan","Polarity","Electrolytic"
@@ -362,7 +665,7 @@ FONT=Yes
 
 [Section]
 Index=0
-Name="circuit1"
+Name="circuit123"
 Type=Main
 Enable=True
 CurrentPage 0=0
@@ -383,9 +686,9 @@ Name=Main
 Scale 0=1
 Scale 1=1
 Scale 2=1
-SB 3=121,172
-Scale 3=0.5
-Grid=84,32
+SB 3=580,587
+Scale 3=0.6666666666666666
+Grid=142,120
 
 [Page]
 Index=1
@@ -426,11 +729,29 @@ Page=2
 Font=Height=-15,FStyle=0,Color=#000000,Name=Courier New
 Comment Color=#008000
 Background Color=#FFFFFF
-Len=0
+Len=338
+
+			
+.MODEL MJD50T4 NPN (IS=7.25559E-11 BF=26.7185 NF=1.5 VAF=25.4206
++ IKF=6.11331 ISE=4.74986E-12 NE=3.46876 BR=2.67185
++ NR=1.44677 VAR=3.40787 IKR=3.07918 ISC=4.75E-13
++ NC=3.96875 RB=0.911238 IRB=0.1 RBM=0.1
++ RE=0.000647444 RC=0.138596 XTB=0.130702 XTI=1
++ EG=1.13492 CJE=3.02579E-09 VJE=0.649273 MJE=0.351387
++ TF=6.6943E-9 XTF=1.5 VTF=1 ITF=0.999999
++ CJC=3.0004E-10 VJC=0.600008 MJC=0.409967 XCJC=0.8
++ FC=0.534143 CJS=0 VJS=0.75 MJS=0.5
++ TR=1E-07 PTF=0 KF=0 AF=1)
+
+.MODEL 2SD667 NPN (BF=3.640000E+02 BR=11.9 CJC=4.110000E-11 CJE=4.91E-10 FC=0.5
++ IKF=0.376 IKR=1 IRB=0.227 IS=2.93p ISC=1E-13 ISE=6.87E-13 ITF=100 MJC=0.449
++ MJE=0.33 NE=1.36 NF=1.08 NR=1.03 RB=6.91 RBM=2.35 RC=2.450000E-01 RE=0.01
++ TF=8.520000E-10 VAF=41.6 VAR=50 VJC=0.518 VJE=0.75 VTF=1E+06 XTB=0.001
++ XTF=5.270000E+03 XTI=1)
 
 
 [Transient]
-Window Placement=2,3, -1,-1, -8,-30, 25,25,1636,690
+Window Placement=2,3, -1,-1, -8,-30, 0,0,1065,655
 Font=Height=-15,FStyle=0,Color=#0000FF,Name=Arial
 WinBackGround Color=#FFFFFF
 Select Color=#FF0000
@@ -449,7 +770,7 @@ MinorLog25=Off
 LabelMinor=Off
 OperPoint=True
 OperPointOnly=False
-AutoScaleRanges=False
+AutoScaleRanges=True
 DataPoints=False
 Token=False
 Ruler=False
@@ -586,7 +907,7 @@ Seed=0
 
 [Limits]
 Analysis=Transient
-TRange=1u
+TRange=1000u
 TStep=0
 NPts=51
 Temp=27
@@ -601,12 +922,12 @@ Analysis=Transient
 Plt=1
 AliasID=1
 XExp=T
-YExp=v(1)
-XRng=1e-6
-YRng=25
+YExp=v(OUT)
+XRng=0.001
+YRng=40,-10
 Options=LINEARX,LINEARY
-Range Grid X=2e-7
-Range Grid Y=5
+Range Grid X=0.0002
+Range Grid Y=10
 Line Color=#0000FF
 Text Color=#0000FF
 Rainbow=False
@@ -624,12 +945,12 @@ Analysis=Transient
 Plt=1
 AliasID=2
 XExp=T
-YExp=v(2)
-XRng=1e-6
-YRng=25
+YExp=v(4)
+XRng=0.001
+YRng=40,-10
 Options=LINEARX,LINEARY
-Range Grid X=2e-7
-Range Grid Y=5
+Range Grid X=0.0002
+Range Grid Y=10
 Line Color=#FF0000
 Text Color=#FF0000
 Rainbow=False
@@ -644,8 +965,15 @@ SFmtY=3
 
 [WaveForm]
 Analysis=Transient
-AliasID=-1
+Plt=2
+AliasID=3
+XExp=T
+YExp=v(IN)
+XRng=0.001
+YRng=7.5
 Options=LINEARX,LINEARY
+Range Grid X=0.0002
+Range Grid Y=1.5
 Line Color=#008000
 Text Color=#008000
 Rainbow=False

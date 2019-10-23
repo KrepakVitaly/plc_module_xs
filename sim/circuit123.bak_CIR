@@ -688,7 +688,7 @@ Scale 1=1
 Scale 2=1
 SB 3=580,587
 Scale 3=0.6666666666666666
-Grid=118,104
+Grid=142,120
 
 [Page]
 Index=1
@@ -705,7 +705,6 @@ Type=Text
 Print=False
 Enable=True
 Name=Models
-SB 0=25,5
 
 [Page]
 Index=3
