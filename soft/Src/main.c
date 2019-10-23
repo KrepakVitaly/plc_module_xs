@@ -170,6 +170,20 @@ int main(void)
     
   int pwmetor = 0;
   int delay = 1;
+  
+//                              0SIZE| HEAD OF PACKET |     --------    |  CMD  | DATA |   CRC32 (not used)  |
+//                              0     1     2    3      4    5     6      7     8     9     10   11    12
+ uint8_t test[PACKET_SIZE*2] = {0x0c, 0x32 ,0x02 ,0x77 ,0x00 ,0x00 ,0x00 ,0x01 ,0x00 ,0xec ,0xf3 ,0x81 ,0x8b, 
+                               0x32 ,0x02 ,0x77 ,0x00 ,0x00 ,0x00 ,0x01 ,0x00 ,0xec ,0xf3 ,0x81, 0x0e, 0x0e, };
+uint8_t zero_test[PACKET_SIZE+1] = {0x01 ,0x22 ,0x02 ,0x77 ,0x00 ,0x00 ,0x00 ,0x01 ,0x00 ,0xec ,0xf3 ,0x81 ,0x8b, 0};
+ uint8_t ret = 0;
+// while(1)
+//{
+//  ret = HAL_UART_Transmit_IT(&huart1, test, PACKET_SIZE);
+//  test[9]++;
+
+//  HAL_Delay(2500);
+//}
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -179,28 +193,28 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//    while (1)
-//    {
-//      pwmetor++;
-//      
-//      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_SET);
-//      delayUS(delay);
-//      HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
-//      delayUS((100-delay));
-//      
-//      if (pwmetor >= 5000)
-//      {
-//        delay+= 1;
-//        pwmetor = 0;
-//      }
-//      
-//      if (delay >= 100)
-//      {
-//        delay = 0;
-//        HAL_GPIO_WritePin(PWM_GPIO_Port, PWM_Pin, GPIO_PIN_RESET);
-//        HAL_Delay(4000);
-//      }
-//    }
+    while (1)
+    {
+      pwmetor++;
+      
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+      delayUS(delay);
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+      delayUS((100-delay));
+      
+      if (pwmetor >= 5000)
+      {
+        delay+= 1;
+        pwmetor = 0;
+      }
+      
+      if (delay >= 100)
+      {
+        delay = 0;
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+        HAL_Delay(4000);
+      }
+    }
     
     
     
@@ -354,6 +368,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   if (huart == &huart1)	
   {
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+
     CircularBuffer_Put_OW(&kq130_buf, plc_uart_buf);
     new_byte_received = 1;
   }
