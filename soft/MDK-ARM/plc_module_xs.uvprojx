@@ -14,11 +14,11 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32F030F4Px</Device>
+          <Device>STM32F031F6Px</Device>
           <Vendor>STMicroelectronics</Vendor>
           <PackID>Keil.STM32F0xx_DFP.2.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20000000-0x20000FFF) IROM(0x8000000-0x8003FFF)  CLOCK(8000000) CPUTYPE("Cortex-M0")</Cpu>
+          <Cpu>IRAM(0x20000000-0x20000FFF) IROM(0x8000000-0x8007FFF) CLOCK(8000000) CPUTYPE("Cortex-M0")</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
@@ -33,8 +33,8 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F030F4Px$CMSIS\SVD\STM32F0x0.svd</SFDFile>
-          <bCustSvd>0</bCustSvd>
+          <SFDFile>$$Device:STM32F031F6Px$CMSIS\SVD\STM32F0x1.svd</SFDFile>
+          <bCustSvd>1</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
@@ -194,7 +194,7 @@
             <RoSelD>3</RoSelD>
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
-            <OptFeed>0</OptFeed>
+            <OptFeed>1</OptFeed>
             <NoZi1>0</NoZi1>
             <NoZi2>0</NoZi2>
             <NoZi3>0</NoZi3>
@@ -249,7 +249,7 @@
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x4000</Size>
+                <Size>0x8000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -274,7 +274,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x4000</Size>
+                <Size>0x8000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -299,7 +299,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x1000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -311,7 +311,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -324,7 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>1</uGnu>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F030x6</Define>
+              <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32F031x6,USE_FULL_LL_DRIVER,USE_HAL_DRIVER,USE_HAL_DRIVER,STM32F031x6</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;   ../Drivers/STM32F0xx_HAL_Driver/Inc;   ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy;   ../Drivers/CMSIS/Device/ST/STM32F0xx/Include;   ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc; ../Drivers/STM32F0xx_HAL_Driver/Inc; ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy; ../Drivers/CMSIS/Device/ST/STM32F0xx/Include; ../Drivers/CMSIS/Include; ..\..\..\plc_greenlight_protocol\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -382,9 +382,9 @@
           <GroupName>Application/MDK-ARM</GroupName>
           <Files>
             <File>
-              <FileName>startup_stm32f030x6.s</FileName>
+              <FileName>startup_stm32f031x6.s</FileName>
               <FileType>2</FileType>
-              <FilePath>startup_stm32f030x6.s</FilePath>
+              <FilePath>startup_stm32f031x6.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -394,22 +394,27 @@
             <File>
               <FileName>circular_buffer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\circular_buffer.c</FilePath>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\circular_buffer.c</FilePath>
             </File>
             <File>
-              <FileName>dali_interface_lib.c</FileName>
+              <FileName>plc_greenlight_master.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\dali_interface_lib.c</FilePath>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\plc_greenlight_master.c</FilePath>
             </File>
             <File>
-              <FileName>plc_mmrpi.c</FileName>
+              <FileName>plc_greenlight_protocol.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\plc_mmrpi.c</FilePath>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\plc_greenlight_protocol.c</FilePath>
             </File>
             <File>
-              <FileName>stm32_uid.c</FileName>
+              <FileName>plc_greenlight_repeater.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\stm32_uid.c</FilePath>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\plc_greenlight_repeater.c</FilePath>
+            </File>
+            <File>
+              <FileName>plc_greenlight_slave.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\plc_greenlight_slave.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -422,14 +427,14 @@
               <FilePath>../Src/gpio.c</FilePath>
             </File>
             <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/adc.c</FilePath>
+            </File>
+            <File>
               <FileName>crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/crc.c</FilePath>
-            </File>
-            <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/rtc.c</FilePath>
             </File>
             <File>
               <FileName>tim.c</FileName>
@@ -457,6 +462,16 @@
           <GroupName>Drivers/STM32F0xx_HAL_Driver</GroupName>
           <Files>
             <File>
+              <FileName>stm32f0xx_hal_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f0xx_hal_adc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc_ex.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f0xx_hal_crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_crc.c</FilePath>
@@ -465,16 +480,6 @@
               <FileName>stm32f0xx_hal_crc_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_crc_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f0xx_hal_rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f0xx_hal_rtc_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rtc_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32f0xx_hal_tim.c</FileName>
@@ -495,6 +500,21 @@
               <FileName>stm32f0xx_hal_uart_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f0xx_ll_rcc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f0xx_ll_utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f0xx_ll_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_exti.c</FilePath>
             </File>
             <File>
               <FileName>stm32f0xx_hal_rcc.c</FileName>

@@ -1,7 +1,7 @@
 ;******************** (C) COPYRIGHT 2016 STMicroelectronics ********************
-;* File Name          : startup_stm32f030x6.s
+;* File Name          : startup_stm32f031x6.s
 ;* Author             : MCD Application Team
-;* Description        : STM32F030x4/STM32F030x6 devices vector table for MDK-ARM toolchain.
+;* Description        : STM32F031x4/STM32F031x6 devices vector table for MDK-ARM toolchain.
 ;*                      This module performs:
 ;*                      - Set the initial SP
 ;*                      - Set the initial PC == Reset_Handler
@@ -90,7 +90,7 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
 
                 ; External Interrupts
                 DCD     WWDG_IRQHandler                ; Window Watchdog
-                DCD     0                              ; Reserved
+                DCD     PVD_IRQHandler                 ; PVD through EXTI Line detect
                 DCD     RTC_IRQHandler                 ; RTC through EXTI Line
                 DCD     FLASH_IRQHandler               ; FLASH
                 DCD     RCC_IRQHandler                 ; RCC
@@ -104,7 +104,7 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
                 DCD     ADC1_IRQHandler                ; ADC1 
                 DCD     TIM1_BRK_UP_TRG_COM_IRQHandler ; TIM1 Break, Update, Trigger and Commutation
                 DCD     TIM1_CC_IRQHandler             ; TIM1 Capture Compare
-                DCD     0                              ; Reserved
+                DCD     TIM2_IRQHandler                ; TIM2
                 DCD     TIM3_IRQHandler                ; TIM3
                 DCD     0                              ; Reserved
                 DCD     0                              ; Reserved
@@ -163,6 +163,7 @@ SysTick_Handler PROC
 Default_Handler PROC
 
                 EXPORT  WWDG_IRQHandler                [WEAK]
+                EXPORT  PVD_IRQHandler                 [WEAK]
                 EXPORT  RTC_IRQHandler                 [WEAK]
                 EXPORT  FLASH_IRQHandler               [WEAK]
                 EXPORT  RCC_IRQHandler                 [WEAK]
@@ -175,6 +176,7 @@ Default_Handler PROC
                 EXPORT  ADC1_IRQHandler                [WEAK]
                 EXPORT  TIM1_BRK_UP_TRG_COM_IRQHandler [WEAK]
                 EXPORT  TIM1_CC_IRQHandler             [WEAK]
+                EXPORT  TIM2_IRQHandler                [WEAK]
                 EXPORT  TIM3_IRQHandler                [WEAK]
                 EXPORT  TIM14_IRQHandler               [WEAK]
                 EXPORT  TIM16_IRQHandler               [WEAK]
@@ -182,9 +184,10 @@ Default_Handler PROC
                 EXPORT  I2C1_IRQHandler                [WEAK]
                 EXPORT  SPI1_IRQHandler                [WEAK]
                 EXPORT  USART1_IRQHandler              [WEAK]
- 
+
 
 WWDG_IRQHandler
+PVD_IRQHandler
 RTC_IRQHandler
 FLASH_IRQHandler
 RCC_IRQHandler
@@ -194,9 +197,10 @@ EXTI4_15_IRQHandler
 DMA1_Channel1_IRQHandler
 DMA1_Channel2_3_IRQHandler
 DMA1_Channel4_5_IRQHandler
-ADC1_IRQHandler 
+ADC1_IRQHandler
 TIM1_BRK_UP_TRG_COM_IRQHandler
 TIM1_CC_IRQHandler
+TIM2_IRQHandler
 TIM3_IRQHandler
 TIM14_IRQHandler
 TIM16_IRQHandler

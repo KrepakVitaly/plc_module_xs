@@ -2,6 +2,7 @@
 *.o
 *.crf
 *.__i
+*._2i
 *.scvd
 *.iex
 *plc_module_xs.uvguix*
