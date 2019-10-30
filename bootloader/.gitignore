@@ -1,0 +1,14 @@
+*.d
+*.o
+*.crf
+*.__i
+*.scvd
+*.iex
+*bootloader_plc_module_xs.uvguix*
+*bootloader_plc_module_xs_plc_module_xs.dep
+*bootloader_plc_module_xs.htm
+*bootloader_plc_module_xs.build_log.htm
+*bootloader_plc_module_xs.lnp
+*bootloader_plc_module_xs.sct
+*bootloader_plc_module_xs.map
+*bootloader_plc_module_xs.axf
