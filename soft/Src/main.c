@@ -120,10 +120,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
     // Update Sensors values if there is flag
     
+    // if repeater enabled,
+    //    check if repeater packet from master or from slave received
+    // if repeater packet received, resend it and set processing status
+    
     // Check UART buf if regular packet received process it and send answer
     
-    // if repeater enabled, check if repeater packet received
-    // if repeater packet received, set processing status
+    
   }
   /* USER CODE END 3 */
 }
