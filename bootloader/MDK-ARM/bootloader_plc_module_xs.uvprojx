@@ -334,7 +334,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>--fshort-enums</MiscControls>
+              <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F031x6,USE_HAL_DRIVER,STM32F031x6,USE_FULL_LL_DRIVER</Define>
               <Undefine></Undefine>
               <IncludePath>../Inc;   ../Drivers/STM32F0xx_HAL_Driver/Inc;   ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy;   ../Drivers/CMSIS/Device/ST/STM32F0xx/Include;   ../Drivers/CMSIS/Include;   ..\..\..\plc_greenlight_protocol\Inc</IncludePath>
