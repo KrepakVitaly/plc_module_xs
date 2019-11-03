@@ -2,7 +2,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"   
+#include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -28,6 +28,11 @@ TIM_HandleTypeDef htim1;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+/**Firmware starts at address different than 0*/
+#define FW_START_ADDR 0x08002000U
+ 
+/**Force VectorTable to specific memory position defined in linker*/
+volatile uint32_t VectorTable[48] __attribute__((section(".RAMVectorTable")));
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -36,6 +41,20 @@ static void MX_GPIO_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
+//copy the vector table to SRAM
+void remapMemToSRAM( void )
+{
+    uint32_t vecIndex = 0;
+    __disable_irq();
+ 
+    for(vecIndex = 0; vecIndex < 48; vecIndex++){
+        VectorTable[vecIndex] = *(volatile uint32_t*)(FW_START_ADDR + (vecIndex << 2));
+    }
+ 
+    __HAL_SYSCFG_REMAPMEMORY_SRAM();
+ 
+    __enable_irq();
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -75,9 +94,47 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  while (1)
+  {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    
+    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    
+    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    
+    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    
+    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);  
+    
+
+#define APPLICATION_START_ADDRESS   0x8002000U
+
+    if (((*(__IO uint32_t*)APPLICATION_START_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
+    {
+        /* First, disable all IRQs */
+        __disable_irq();
+
+        /* Get the main application start address */
+        uint32_t jump_address = *(__IO uint32_t *)(APPLICATION_START_ADDRESS + 4);
+
+        /* Set the main stack pointer to to the application start address */
+        __set_MSP(*(__IO uint32_t *)APPLICATION_START_ADDRESS);
+
+        // Create function pointer for the main application
+        void (*pmain_app)(void) = (void (*)(void))(jump_address);
+
+        // Now jump to the main application
+        pmain_app();
+    }
+  }
   /* USER CODE END 3 */
 }
 
