@@ -1,9 +1,9 @@
 Dependencies for Project 'bootloader_plc_module_xs', Target 'bootloader_plc_module_xs': (DO NOT MODIFY !)
-F (startup_stm32f031x6.s)(0x5DBB12B9)(--cpu Cortex-M0 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include--pd "__UVISION_VERSION SETA 525" --pd "_RTE_ SETA 1" --pd "STM32F031x6 SETA 1"--list startup_stm32f031x6.lst --xref -o bootloader_plc_module_xs\startup_stm32f031x6.o --depend bootloader_plc_module_xs\startup_stm32f031x6.d)
-F (../Src/main.c)(0x5DC1967C)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\main.o --omf_browse bootloader_plc_module_xs\main.crf --depend bootloader_plc_module_xs\main.d)
-I (../Inc/main.h)(0x5DBB12B4)
+F (startup_stm32f031x6.s)(0x5DC29183)(--cpu Cortex-M0 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include--pd "__UVISION_VERSION SETA 525" --pd "_RTE_ SETA 1" --pd "STM32F031x6 SETA 1"--list startup_stm32f031x6.lst --xref -o bootloader_plc_module_xs\startup_stm32f031x6.o --depend bootloader_plc_module_xs\startup_stm32f031x6.d)
+F (../Src/main.c)(0x5DC29211)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\main.o --omf_browse bootloader_plc_module_xs\main.crf --depend bootloader_plc_module_xs\main.d)
+I (../Inc/main.h)(0x5DC29180)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -41,12 +41,16 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h)(0x5D1F247A)
+I (../Inc/tim.h)(0x5DC2917E)
+I (../Inc/usart.h)(0x5DC2917E)
+I (../Inc/gpio.h)(0x5DC2917E)
 I (..\..\..\plc_greenlight_protocol\Inc\circular_buffer.h)(0x5DB9C87B)
 I (..\..\..\plc_greenlight_protocol\Inc\plc_greenlight_protocol.h)(0x5DB9B88A)
-F (../Src/stm32f0xx_it.c)(0x5DBB12B3)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_it.o --omf_browse bootloader_plc_module_xs\stm32f0xx_it.crf --depend bootloader_plc_module_xs\stm32f0xx_it.d)
-I (../Inc/main.h)(0x5DBB12B4)
+F (../Src/gpio.c)(0x5DC2917D)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\gpio.o --omf_browse bootloader_plc_module_xs\gpio.crf --depend bootloader_plc_module_xs\gpio.d)
+I (../Inc/gpio.h)(0x5DC2917E)
+I (../Inc/main.h)(0x5DC29180)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -84,11 +88,136 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_it.h)(0x5DBB12B3)
-F (../Src/stm32f0xx_hal_msp.c)(0x5DBB12B3)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_msp.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_msp.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_msp.d)
-I (../Inc/main.h)(0x5DBB12B4)
+F (../Src/tim.c)(0x5DC2917E)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\tim.o --omf_browse bootloader_plc_module_xs\tim.crf --depend bootloader_plc_module_xs\tim.d)
+I (../Inc/tim.h)(0x5DC2917E)
+I (../Inc/main.h)(0x5DC29180)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f031x6.h)(0x5D1F238A)
+I (../Drivers/CMSIS/Include/core_cm0.h)(0x5D1F2395)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F137E)
+I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_cortex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_flash.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_flash_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_crs.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_rcc.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_bus.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_system.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_exti.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_cortex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h)(0x5D1F247A)
+F (../Src/usart.c)(0x5DC2917E)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\usart.o --omf_browse bootloader_plc_module_xs\usart.crf --depend bootloader_plc_module_xs\usart.d)
+I (../Inc/usart.h)(0x5DC2917E)
+I (../Inc/main.h)(0x5DC29180)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f031x6.h)(0x5D1F238A)
+I (../Drivers/CMSIS/Include/core_cm0.h)(0x5D1F2395)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F137E)
+I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_cortex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_flash.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_flash_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_crs.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_rcc.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_bus.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_system.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_exti.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_cortex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h)(0x5D1F247A)
+F (../Src/stm32f0xx_it.c)(0x5DC2917F)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_it.o --omf_browse bootloader_plc_module_xs\stm32f0xx_it.crf --depend bootloader_plc_module_xs\stm32f0xx_it.d)
+I (../Inc/main.h)(0x5DC29180)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f031x6.h)(0x5D1F238A)
+I (../Drivers/CMSIS/Include/core_cm0.h)(0x5D1F2395)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x599F137E)
+I (../Drivers/CMSIS/Include/core_cmInstr.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
+I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_gpio_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_cortex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_flash.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_flash_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_i2c_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_pwr_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_tim_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_crs.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_rcc.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_bus.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_system.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_exti.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_cortex.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_utils.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_pwr.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h)(0x5D1F247A)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h)(0x5D1F247A)
+I (../Inc/stm32f0xx_it.h)(0x5DC2917F)
+F (../Src/stm32f0xx_hal_msp.c)(0x5DC2917F)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_msp.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_msp.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_msp.d)
+I (../Inc/main.h)(0x5DC29180)
+I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -128,7 +257,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_dma.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_gpio.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_tim.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_tim.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_tim.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -158,7 +287,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim_ex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_tim_ex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_tim_ex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_tim_ex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -188,7 +317,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_uart.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_uart.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_uart.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -218,7 +347,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart_ex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_uart_ex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_uart_ex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_uart_ex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -257,7 +386,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
@@ -288,7 +417,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
@@ -321,7 +450,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
@@ -343,7 +472,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_rcc.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_rcc.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_rcc.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -373,7 +502,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc_ex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_rcc_ex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_rcc_ex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_rcc_ex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -403,7 +532,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal.crf --depend bootloader_plc_module_xs\stm32f0xx_hal.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -433,7 +562,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_i2c.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_i2c.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_i2c.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -463,7 +592,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_i2c_ex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_i2c_ex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_i2c_ex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_i2c_ex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -493,7 +622,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_gpio.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_gpio.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_gpio.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_gpio.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -523,7 +652,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_dma.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_dma.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_dma.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_dma.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -553,7 +682,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_cortex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_cortex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_cortex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_cortex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -583,7 +712,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_pwr.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_pwr.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_pwr.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -613,7 +742,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pwr_ex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_pwr_ex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_pwr_ex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_pwr_ex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -643,7 +772,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_flash.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_flash.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_flash.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -673,7 +802,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c)(0x5D1F247A)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\stm32f0xx_hal_flash_ex.o --omf_browse bootloader_plc_module_xs\stm32f0xx_hal_flash_ex.crf --depend bootloader_plc_module_xs\stm32f0xx_hal_flash_ex.d)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -711,7 +840,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Include/core_cmFunc.h)(0x5D1F2395)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h)(0x5D1F238A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x599F137C)
@@ -734,7 +863,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (..\..\..\plc_greenlight_protocol\Src\circular_buffer.c)(0x5DB9C873)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\circular_buffer.o --omf_browse bootloader_plc_module_xs\circular_buffer.crf --depend bootloader_plc_module_xs\circular_buffer.d)
 I (..\..\..\plc_greenlight_protocol\Inc\circular_buffer.h)(0x5DB9C87B)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
@@ -765,7 +894,7 @@ I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h)(0x5D1F247A)
 F (..\..\..\plc_greenlight_protocol\Src\plc_greenlight_protocol.c)(0x5DB987DB)(--c99 -c --cpu Cortex-M0 -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc -I ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I ../Drivers/CMSIS/Include -I ..\..\..\plc_greenlight_protocol\Inc-I.\RTE\_bootloader_plc_module_xs-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32F0xx\Include-D__UVISION_VERSION="525" -D_RTE_ -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_HAL_DRIVER -DSTM32F031x6 -DUSE_FULL_LL_DRIVER-o bootloader_plc_module_xs\plc_greenlight_protocol.o --omf_browse bootloader_plc_module_xs\plc_greenlight_protocol.crf --depend bootloader_plc_module_xs\plc_greenlight_protocol.d)
 I (..\..\..\plc_greenlight_protocol\Inc\plc_greenlight_protocol.h)(0x5DB9B88A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h)(0x5D1F247A)
-I (../Inc/stm32f0xx_hal_conf.h)(0x5DBB12B4)
+I (../Inc/stm32f0xx_hal_conf.h)(0x5DC2917F)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h)(0x5D1F247A)
 I (../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h)(0x5D1F247A)
 I (../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h)(0x5D1F238A)
