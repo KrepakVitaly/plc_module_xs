@@ -134,19 +134,19 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC_Init();
-  MX_CRC_Init();
-  MX_TIM1_Init();
-  MX_TIM3_Init();
-  MX_USART1_UART_Init();
+  //MX_ADC_Init();
+  //MX_CRC_Init();
+  //MX_TIM1_Init();
+  //MX_TIM3_Init();
+  //MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   
-  InitData(); //plc_node
+  //InitData(); //plc_node
   
   
   // Start Timer for ADC flag
-  HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
-  HAL_TIM_Base_Start_IT(&htim3); // Update UART Rx IT ();
+  //HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
+  //HAL_TIM_Base_Start_IT(&htim3); // Update UART Rx IT ();
   
   // HAL_PLC_Receive_IT (PLC handler)
   // HAL_UART_Receive_IT(&huart1, buf, ONE_BYTE);
@@ -166,9 +166,9 @@ int main(void)
     /*
     if (PLC_Node_Repeater_Packet(plc_node) == TRUE)    //TODO: make it atomic! repeater.Enabled == 1 && 
     {
-       Repeat Packet To Next Domain(plc_node);
+       Repeat Packet To Next Domain (plc_node);
        Wait For Answer (plc_node);
-       if needed RepeatAnswer(plc_node);
+       if needed RepeatAnswer (plc_node);
     }
     */
     
