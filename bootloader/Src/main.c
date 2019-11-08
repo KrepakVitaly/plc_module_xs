@@ -156,6 +156,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
   
+//      uint16_t data = 0x6666;
+//  
+//  HAL_FLASH_Unlock();
+//      //HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, 0x08001FE0U, data);
+//  HAL_FLASH_Lock();
+//  
+//  uint16_t * data0 = (uint16_t *)((__IO uint16_t*) 0x08001FE0U);
 
   
 //  FLASH_OBProgramInitTypeDef FLASH_RDP;
@@ -173,40 +180,7 @@ int main(void)
 //    HAL_FLASH_Lock(); 
 //  }
   
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-//  while (1)
-//  {
-//    uint8_t buf = 0x66;
-//    HAL_UART_Transmit(&huart1, &buf, 1, 1000);
-//    //HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//    HAL_Delay(1000);
-//  }
-  //while (1)
-  {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-//    HAL_Delay(1000);
-//    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//    
-//    HAL_Delay(1000);
-//    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//    
-//    HAL_Delay(1000);
-//    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//    
-   // HAL_Delay(1000);
-//    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//    
-    //HAL_Delay(1000);
-//    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);  
-//    
-    //JumpToApplication();
-  }
-
+  
   /* Hookup Host and Target                           */
   /* First send an ACK. Host should reply with ACK    */
   /* If no valid ACK is received within TIMEOUT_VALUE */
@@ -225,9 +199,17 @@ int main(void)
     
   /* At this point, hookup communication is complete */
   /* Wait for commands and execute accordingly       */
-    
-	for(;;)
-	{
+  
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
     // wait for a command
     while(HAL_UART_Receive(&huart1, pRxBuffer, 2, TIMEOUT_VALUE) != HAL_OK);
 
@@ -306,18 +288,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim1)
 	{	
-      uint16_t data = 0x6666;
-  
-  HAL_FLASH_Unlock();
-      HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, 0x08001FE0U, data);
-  HAL_FLASH_Lock();
-  
-  uint16_t * data0 = (uint16_t *)((__IO uint16_t*) 0x08001FE0U);
-  
-  if (*data0 == data)
-  {
+
     HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-  }
+
     
 	}
 
