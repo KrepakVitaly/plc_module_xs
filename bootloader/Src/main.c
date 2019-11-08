@@ -156,11 +156,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
   
-  uint16_t data = 0x6666;
-  
-  HAL_FLASH_Unlock();
-      HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, 0x08001FE0U, data);
-  HAL_FLASH_Lock();
 
   
 //  FLASH_OBProgramInitTypeDef FLASH_RDP;
@@ -311,7 +306,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim1)
 	{	
+      uint16_t data = 0x6666;
+  
+  HAL_FLASH_Unlock();
+      HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, 0x08001FE0U, data);
+  HAL_FLASH_Lock();
+  
+  uint16_t * data0 = (uint16_t *)((__IO uint16_t*) 0x08001FE0U);
+  
+  if (*data0 == data)
+  {
     HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+  }
+    
 	}
 
 }
