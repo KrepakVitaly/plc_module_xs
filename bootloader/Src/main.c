@@ -3,6 +3,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "crc.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -153,9 +154,10 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
-  
+  Check();
 //      uint16_t data = 0x6666;
 //  
 //  HAL_FLASH_Unlock();
@@ -501,55 +503,58 @@ static void Check(void)
     // Receive the starting address and checksum
     // Address = 4 bytes
     // Checksum = 1 byte
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
-    
-    // Check checksum
-    if(CheckChecksum(pRxBuffer, 5) != 1)
-    {
-        // invalid checksum
-        Send_NACK(&huart1);
-        return;
-    }
-    else
-    {
-        Send_ACK(&huart1);
-    }
-    
-    // Set the starting address
-    startingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
-                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
-    
-    startingAddress = APPLICATION_START_ADDRESS;
-    // Receive the ending address and checksum
-    // Address = 4 bytes
-    // Checksum = 1 byte
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
-    
-    // Check checksum
-    if(CheckChecksum(pRxBuffer, 5) != 1)
-    {
-        // invalid checksum
-        Send_NACK(&huart1);
-        return;
-    }
-    else
-    {
-        Send_ACK(&huart1);
-    }
+//    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
+//    
+//    // Check checksum
+//    if(CheckChecksum(pRxBuffer, 5) != 1)
+//    {
+//        // invalid checksum
+//        Send_NACK(&huart1);
+//        return;
+//    }
+//    else
+//    {
+//        Send_ACK(&huart1);
+//    }
+//    
+//    // Set the starting address
+//    startingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
+//                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
+//    
+//    startingAddress = APPLICATION_START_ADDRESS;
+//    // Receive the ending address and checksum
+//    // Address = 4 bytes
+//    // Checksum = 1 byte
+//    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
+//    
+//    // Check checksum
+//    if(CheckChecksum(pRxBuffer, 5) != 1)
+//    {
+//        // invalid checksum
+//        Send_NACK(&huart1);
+//        return;
+//    }
+//    else
+//    {
+//        Send_ACK(&huart1);
+//    }
     
     // Set the starting address
     endingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
                     + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
+    endingAddress = 0x08002DA3U;
+    startingAddress = 0x08002000U;
     
-//    HAL_RCC_CRC_CLK_ENABLE();
-//    data = (uint32_t *)((__IO uint32_t*) startingAddress);
-//    for(address = startingAddress; address < endingAddress; address += 4)
-//    {
-//        data = (uint32_t *)((__IO uint32_t*) address);
-//        crcResult = HAL_CRC_Accumulate(data, 1);
-//    }
-//    
-//    HAL_RCC_CRC_CLK_DISABLE();
+    data = (uint32_t *)((__IO uint32_t*) startingAddress);
+    for(address = startingAddress; address < endingAddress; address += 4)    
+    {
+        data = (uint32_t *)((__IO uint32_t*) address);
+        crcResult = HAL_CRC_Accumulate(&hcrc, data, 1);
+        HAL_UART_Transmit(&huart1, (uint8_t*)&data, 1, 1);
+    }    
+    
+    HAL_UART_Transmit(&huart1, (uint8_t*)&crcResult, 1, 1);
+    
     if(crcResult == 0x00)
     {
         Send_ACK(&huart1);
