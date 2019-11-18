@@ -67,10 +67,12 @@ void delayUS(uint32_t us) {
 }
 #pragma GCC pop_options
 
-#define FW_START_ADDR 0x08002000U
+#define FW_START_ADDR 0x08004000U
  
 /**Force VectorTable to specific memory position defined in linker*/
 volatile uint32_t VectorTable[48] __attribute__((section(".RAMVectorTable")));
+
+static void JumpToBootloader(void);
 
 void remapMemToSRAM( void )
 {
@@ -100,21 +102,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   remapMemToSRAM();
-//  uint32_t i = 0;
-//  uint32_t VectorTable[48];
-
-//  for(i = 0; i < 48; i++)
-//  {
-//    VectorTable[i] = *(__IO uint32_t*)(0x8002000U + (i<<2));
-//  }
-
-//  __enable_irq();  
-// 
-//  __HAL_RCC_SYSCFG_CLK_ENABLE();
-// 
-//  __HAL_SYSCFG_REMAPMEMORY_SRAM();
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -160,9 +148,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    HAL_Delay(100);
-    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-
+    for (uint8_t i = 0; i < 20; i++)
+    {
+      HAL_Delay(100);
+      HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    }
+    JumpToBootloader();
     /*
     if (PLC_Node_Repeater_Packet(plc_node) == TRUE)    //TODO: make it atomic! repeater.Enabled == 1 && 
     {
@@ -226,6 +217,33 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+/*! \brief Jumps to the main application.
+ */
+static void JumpToBootloader(void) 
+{
+  HAL_TIM_Base_Stop(&htim1);
+#define BOOT_FLAG_ADDRESS   0x08000000U
+
+    if (((*(__IO uint32_t*)BOOT_FLAG_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
+    {
+        /* First, disable all IRQs */
+        __disable_irq();
+
+        /* Get the main application start address */
+        uint32_t jump_address = *(__IO uint32_t *)(BOOT_FLAG_ADDRESS + 4);
+
+        /* Set the main stack pointer to to the application start address */
+        __set_MSP(*(__IO uint32_t *)BOOT_FLAG_ADDRESS);
+
+        // Create function pointer for the main application
+        void (*pmain_app)(void) = (void (*)(void))(jump_address);
+
+        // Now jump to the main application
+        pmain_app();
+    }
+} 
+
 
 void InitData (void)
 {

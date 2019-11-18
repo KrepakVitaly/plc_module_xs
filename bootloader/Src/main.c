@@ -30,7 +30,7 @@
 
 /* USER CODE BEGIN PV */
 /**Firmware starts at address different than 0*/
-#define FW_START_ADDR 0x08002000U
+#define FW_START_ADDR 0x08004000U
 FLASH_EraseInitTypeDef EraseInitStruct;
  
 /**Force VectorTable to specific memory position defined in linker*/
@@ -41,7 +41,7 @@ volatile uint32_t VectorTable[48] __attribute__((section(".RAMVectorTable")));
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 #define BOOT_FLAG_ADDRESS           0x08000000U
-#define APPLICATION_START_ADDRESS   0x08002000U
+#define APPLICATION_START_ADDRESS   0x08004000U
 #define TIMEOUT_VALUE               SystemCoreClock/4
 
 #define ACK     0x06U
@@ -113,7 +113,7 @@ void remapMemToSRAM( void )
     __disable_irq();
  
     for(vecIndex = 0; vecIndex < 48; vecIndex++){
-        VectorTable[vecIndex] = *(volatile uint32_t*)(FW_START_ADDR + (vecIndex << 2));
+        VectorTable[vecIndex] = *(volatile uint32_t*)(BOOT_FLAG_ADDRESS + (vecIndex << 2));
     }
  
     __HAL_SYSCFG_REMAPMEMORY_SRAM();
@@ -133,6 +133,7 @@ void remapMemToSRAM( void )
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  remapMemToSRAM();
   /* USER CODE END 1 */
   
 
@@ -304,7 +305,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 static void JumpToApplication(void) 
 {
   HAL_TIM_Base_Stop(&htim1);
-#define APPLICATION_START_ADDRESS   0x08002000U
+#define APPLICATION_START_ADDRESS   0x08004000U
 
     if (((*(__IO uint32_t*)APPLICATION_START_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
     {
@@ -542,18 +543,18 @@ static void Check(void)
     // Set the starting address
     endingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
                     + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
-    endingAddress = 0x08002DA3U;
-    startingAddress = 0x08002000U;
+    endingAddress = 0x08004DA3U;
+    startingAddress = 0x08004000U;
     
     data = (uint32_t *)((__IO uint32_t*) startingAddress);
     for(address = startingAddress; address < endingAddress; address += 4)    
     {
         data = (uint32_t *)((__IO uint32_t*) address);
         crcResult = HAL_CRC_Accumulate(&hcrc, data, 1);
-        HAL_UART_Transmit(&huart1, (uint8_t*)&data, 1, 1);
+        HAL_UART_Transmit(&huart1, (uint8_t*)&data, 4, 1);
     }    
     
-    HAL_UART_Transmit(&huart1, (uint8_t*)&crcResult, 1, 1);
+    HAL_UART_Transmit(&huart1, (uint8_t*)&crcResult, 4, 1);
     
     if(crcResult == 0x00)
     {
