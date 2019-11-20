@@ -175,7 +175,7 @@ int main(void)
   HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.y, 2, 100);
   HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.Wafer, 1, 100);
   HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.Lot, 7, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.flash_size, 2, 100);
   HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
   
   HAL_Delay(5000);
