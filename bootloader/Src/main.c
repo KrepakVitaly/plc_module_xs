@@ -39,9 +39,9 @@ volatile uint32_t VectorTable[48] __attribute__((section(".RAMVectorTable")));
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-#define BOOT_START_ADDRESS           0x08000000U
+#define BOOT_START_ADDRESS          0x08000000U
 #define APPLICATION_START_ADDRESS   0x08004000U
-#define TIMEOUT_VALUE               SystemCoreClock/4
+#define TIMEOUT_VALUE               SystemCoreClock/2000
 
 #define ACK     0x06U
 #define NACK    0x16U
@@ -55,10 +55,10 @@ static uint8_t pRxBuffer[32];
 
 typedef enum
 {
-    ERASE = 0x43,
-    WRITE = 0x31,
-    CHECK = 0x51,
-    JUMP  = 0xA1,
+    ERASE  = 0x43,
+    WRITE  = 0x31,
+    VERIFY = 0x51,
+    JUMP   = 0xA1,
 } COMMANDS;
 
 /*****************************************************************************/
@@ -96,6 +96,8 @@ static void Send_NACK(UART_HandleTypeDef *UartHandle);
  */
 static uint8_t CheckChecksum(uint8_t *pBuffer, uint32_t len);
 
+static uint8_t CheckMaintenance(uint8_t * pBuffer);
+
 /*! \brief Erase flash function
  */
 static void Erase(void);
@@ -106,7 +108,7 @@ static void Write(void);
 
 /*! \brief Check flashed image
  */
-static void Check(void);
+static void Verify(void);
 
 //copy the vector table to SRAM
 void remapMemToSRAM( void )
@@ -138,7 +140,6 @@ int main(void)
   remapMemToSRAM();
   /* USER CODE END 1 */
   
-
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -162,42 +163,24 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
   
-  uint8_t ret_carr[2] = "\r\n";  
-  HAL_UART_Transmit(&huart1, (uint8_t*) &(STM32_UUID_ADDR[0]), 4, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) &(STM32_UUID_ADDR[1]), 4, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) &(STM32_UUID_ADDR[2]), 4, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100); 
-  
-  HAL_Delay(1000);
-  
-  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.x, 2, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.y, 2, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.Wafer, 1, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.Lot, 7, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.flash_size, 2, 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
-  
-  HAL_Delay(5000);
-  
-  //Check(); 
-  while(1) {}
+  //Verify(); 
+
   /* Hookup Host and Target                           */
   /* First send an ACK. Host should reply with ACK    */
   /* If no valid ACK is received within TIMEOUT_VALUE */
   /* then jump to main application                    */
-  Send_ACK(&huart1);
+  
   if(HAL_UART_Receive(&huart1, pRxBuffer, 2, TIMEOUT_VALUE) != HAL_OK)
   {
-    Send_NACK(&huart1);
     JumpToApplication();
   }
-  if(CheckChecksum(pRxBuffer, 2) != 1 || pRxBuffer[0] != ACK)
+  // wait for the Maintenance packet with UID of this uC
+  if(CheckMaintenance(pRxBuffer) != 1)
   {
-    Send_NACK(&huart1);
     JumpToApplication();
   }
-    
+  
+  Send_ACK(&huart1);
   /* At this point, hookup communication is complete */
   /* Wait for commands and execute accordingly       */
   
@@ -228,26 +211,22 @@ int main(void)
             break;
         case WRITE:
             Send_ACK(&huart1);
-            //Write();
+            Write();
             break;
-        case CHECK:
+        case VERIFY:
             Send_ACK(&huart1);
-            //Check();
+            Verify();
             break;
         case JUMP:
             Send_ACK(&huart1);
             JumpToApplication();
             break;
         default: // Unsupported command
-            Send_ACK(&huart1);
+            Send_NACK(&huart1);
             break;
       }
     }
 	}
-    
-  for(;;);
-    
-	return 0;
   /* USER CODE END 3 */
 }
 
@@ -422,16 +401,76 @@ static void Erase(void)
  */
 static void Write(void)
 {
-    uint8_t numBytes;
-    uint32_t startingAddress = 0;
-    uint8_t i;
-    // Receive the starting address and checksum
+    // Update Address START command
+    // Receive the starting address, the number of bytes to be written and checksum 
     // Address = 4 bytes
+    // numBytes = 1 byte number of bytes to be written
     // Checksum = 1 byte
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 6, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum
+    if(CheckChecksum(pRxBuffer, 6) != 1)
+    {
+      // invalid checksum
+      Send_NACK(&huart1);
+      return;
+    }
+    else
+    {
+      Send_ACK(&huart1);
+    }
+    
+    // Set the starting address
+    uint32_t startingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
+                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
+
+    // set the number of bytes to be written
+    uint8_t numBytes = pRxBuffer[4];
+    
+    // Receive the data
+    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+1, TIMEOUT_VALUE) != HAL_OK);
+    
+    // Check checksum of received data
     if(CheckChecksum(pRxBuffer, 5) != 1)
+    {
+      // invalid checksum
+      Send_NACK(&huart1);
+      return;
+    }
+    
+    // valid checksum at this point
+    // Program flash with the data
+    uint8_t i = 0;
+    HAL_FLASH_Unlock();
+    while(numBytes--)
+    {
+      HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, startingAddress, pRxBuffer[i] + (pRxBuffer[i+1] << 8));
+      startingAddress++;
+      i+=2;
+    }
+    HAL_FLASH_Lock();
+    
+    // Send ACK
+    Send_ACK(&huart1);
+}
+
+/*! \brief Verify flashed image checksum
+ */
+static void Verify(void)
+{
+    uint32_t startingAddress = 0;
+    uint32_t endingAddress = 0;
+    uint32_t address;
+    uint32_t *data;
+    uint32_t crcResult;
+    
+    // Receive the starting address and checksum
+    // Address = 4 bytes
+    // Checksum = 4 byte
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 8, TIMEOUT_VALUE) != HAL_OK);
+    
+    // Check checksum
+    if(CheckChecksum(pRxBuffer, 8) != 1)
     {
         // invalid checksum
         Send_NACK(&huart1);
@@ -447,93 +486,10 @@ static void Write(void)
                     + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
     
     startingAddress = APPLICATION_START_ADDRESS;
-    // Receive the number of bytes to be written
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 2, TIMEOUT_VALUE) != HAL_OK);
-    numBytes = pRxBuffer[0];
-    
-    // Receive the data
-    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+1, TIMEOUT_VALUE) != HAL_OK);
-    
-    // Check checksum of received data
-    if(CheckChecksum(pRxBuffer, 5) != 1)
-    {
-        // invalid checksum
-        Send_NACK(&huart1);
-        return;
-    }
-    
-    // valid checksum at this point
-    // Program flash with the data
-    i = 0;
-    HAL_FLASH_Unlock();
-    while(numBytes--)
-    {
-      HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, startingAddress, pRxBuffer[i] + (pRxBuffer[i+1] << 8));
-      startingAddress++;
-      i+=2;
-    }
-    HAL_FLASH_Lock();
-    
-    // Send ACK
-    Send_ACK(&huart1);
-}
-
-/*! \brief Check flashed image
- */
-static void Check(void)
-{
-    uint32_t startingAddress = 0;
-    uint32_t endingAddress = 0;
-    uint32_t address;
-    uint32_t *data;
-    uint32_t crcResult;
-    
-    // Receive the starting address and checksum
-    // Address = 4 bytes
-    // Checksum = 1 byte
-//    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
-//    
-//    // Check checksum
-//    if(CheckChecksum(pRxBuffer, 5) != 1)
-//    {
-//        // invalid checksum
-//        Send_NACK(&huart1);
-//        return;
-//    }
-//    else
-//    {
-//        Send_ACK(&huart1);
-//    }
-//    
-//    // Set the starting address
-//    startingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
-//                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
-//    
-//    startingAddress = APPLICATION_START_ADDRESS;
-//    // Receive the ending address and checksum
-//    // Address = 4 bytes
-//    // Checksum = 1 byte
-//    while(HAL_UART_Receive(&huart1, pRxBuffer, 5, TIMEOUT_VALUE) != HAL_OK);
-//    
-//    // Check checksum
-//    if(CheckChecksum(pRxBuffer, 5) != 1)
-//    {
-//        // invalid checksum
-//        Send_NACK(&huart1);
-//        return;
-//    }
-//    else
-//    {
-//        Send_ACK(&huart1);
-//    }
-    
-    // Set the starting address
-    endingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
-                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
                     
     const uint32_t FLASH_START_ADDRESS = 0x08004000U; // Flash start address
     const uint32_t FLASH_LENGTH = 0x00004000U; // Flash size                
-    endingAddress = 0x08004DA3U;
+    endingAddress = 0x08007FFFU;
     startingAddress = 0x08004000U;
     
     data = (uint32_t *)((__IO uint32_t*) startingAddress);
@@ -613,6 +569,52 @@ uint32_t crc_32_update(uint8_t *data, uint32_t length)
     length--;
   }
   return (crc32 ^ 0xFFFFFFFF); 
+}
+
+static uint8_t CheckMaintenance(uint8_t * pBuffer)
+{
+  if (pBuffer[0] != MAINTENANCE_PACKET_SIZE - 1) //check first byte KQ330 protocol
+    return 0; //error
+
+  if (pBuffer[1] != MAINTENANCE_PACKET_HEAD_BYTE_1)
+    return 0; //error
+
+  if (pBuffer[2] != MAINTENANCE_PACKET_HEAD_BYTE_2)
+    return 0; //error
+  
+  uint32_t packet_crc = crc_32_update(pBuffer, MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
+  
+  uint32_t rxed_crc = pRxBuffer[MAINTENANCE_PACKET_SIZE-4]
+                    + (pRxBuffer[MAINTENANCE_PACKET_SIZE-3] << 8) 
+                    + (pRxBuffer[MAINTENANCE_PACKET_SIZE-2] << 16) 
+                    + (pRxBuffer[MAINTENANCE_PACKET_SIZE-1] << 24);
+  if (rxed_crc != packet_crc)
+    return 0;
+  
+  uint32_t rxed_id_part1 = pRxBuffer[3]
+                    + (pRxBuffer[4]  << 8 ) 
+                    + (pRxBuffer[5]  << 16) 
+                    + (pRxBuffer[6]  << 24); 
+  uint32_t rxed_id_part2 = pRxBuffer[7]
+                    + (pRxBuffer[8]  << 8 ) 
+                    + (pRxBuffer[9]  << 16) 
+                    + (pRxBuffer[10] << 24); 
+  uint32_t rxed_id_part3 = pRxBuffer[3]
+                    + (pRxBuffer[11] << 8 ) 
+                    + (pRxBuffer[12] << 16) 
+                    + (pRxBuffer[13] << 24); 
+  
+  if (rxed_id_part1 != Signature.idPart1)
+    return 0;
+  if (rxed_id_part2 != Signature.idPart2)
+    return 0;
+  if (rxed_id_part3 != Signature.idPart3)
+    return 0;
+
+  if (pRxBuffer[14] != 0x00 && pRxBuffer[14] != 0x00 && pRxBuffer[14] != 0x00)
+    return 0;
+  
+  return 1;
 }
 
 

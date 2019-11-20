@@ -2,7 +2,7 @@
 
 STM32_UUID Signature;
 
-void Init_UUID()
+void Init_UUID(void)
 {
   Signature.idPart1 = STM32_UUID_ADDR[0];
   Signature.idPart2 = STM32_UUID_ADDR[1];

@@ -10,6 +10,7 @@
  * http://blog.gorski.pm/stm32-unique-id
  * https://stackoverflow.com/questions/29323699/how-to-find-the-device-id-of-a-stm32f103ret
  * https://gist.github.com/ElectronicaXAB3
+ * https://www.st.com/content/ccc/resource/technical/document/reference_manual/4a/19/6e/18/9d/92/43/32/DM00043574.pdf/files/DM00043574.pdf/jcr:content/translations/en.DM00043574.pdf
  */
 #ifndef __UUID_H
 #define __UUID_H
@@ -41,6 +42,6 @@ typedef struct {
 
 extern STM32_UUID Signature;
 
-void Init_UUID(); 
+void Init_UUID(void); 
 
 #endif //__UUID_H
