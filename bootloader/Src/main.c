@@ -41,7 +41,10 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 #define BOOT_START_ADDRESS          0x08000000U
 #define APPLICATION_START_ADDRESS   0x08004000U
+#define APPLICATION_LENGTH          0x00004000U
+
 #define TIMEOUT_VALUE               SystemCoreClock/2000
+#define TX_TIMEOUT_VALUE            1000
 
 #define ACK     0x06U
 #define NACK    0x16U
@@ -162,14 +165,11 @@ int main(void)
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
-  
-  //Verify(); 
 
-  /* Hookup Host and Target                           */
-  /* First send an ACK. Host should reply with ACK    */
-  /* If no valid ACK is received within TIMEOUT_VALUE */
-  /* then jump to main application                    */
-  
+  /* Hookup Host and Target                                         */
+  /* First send a Maintenance packet. Host should reply with ACK    */
+  /* If no valid packet is received within TIMEOUT_VALUE            */
+  /* then jump to main application                                  */
   if(HAL_UART_Receive(&huart1, pRxBuffer, 2, TIMEOUT_VALUE) != HAL_OK)
   {
     JumpToApplication();
@@ -179,7 +179,6 @@ int main(void)
   {
     JumpToApplication();
   }
-  
   Send_ACK(&huart1);
   /* At this point, hookup communication is complete */
   /* Wait for commands and execute accordingly       */
@@ -195,15 +194,15 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     // wait for a command
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 2, TIMEOUT_VALUE) != HAL_OK);
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 3, TIMEOUT_VALUE) != HAL_OK);
 
-    if(CheckChecksum(pRxBuffer, 2) != 1)
+    if(CheckChecksum(pRxBuffer, 3) != 1)
     {
         Send_NACK(&huart1);
     }
     else
     {
-      switch(pRxBuffer[0])
+      switch(pRxBuffer[1])
       {
         case ERASE:
             Send_ACK(&huart1);
@@ -302,8 +301,8 @@ static void JumpToApplication(void)
  */
 static void Send_ACK(UART_HandleTypeDef *handle)
 {
-  uint8_t msg[2] = {ACK, ACK};
-  HAL_UART_Transmit(handle, msg, 2, TIMEOUT_VALUE); //TODO: set TX_TIMEOUT_VALUE
+  uint8_t msg[3] = {0x02, ACK, 0x02 ^ ACK ^ 0xFF};
+  HAL_UART_Transmit(handle, msg, 3, TX_TIMEOUT_VALUE);
 }
 
 /*! \brief Sends an NACKnowledge byte to the host.
@@ -312,8 +311,8 @@ static void Send_ACK(UART_HandleTypeDef *handle)
  */
 static void Send_NACK(UART_HandleTypeDef *handle)
 {
-  uint8_t msg[2] = {NACK, NACK};
-  HAL_UART_Transmit(handle, msg, 2, TIMEOUT_VALUE); //TODO: set TX_TIMEOUT_VALUE
+  uint8_t msg[3] = {0x02, NACK, 0x02 ^ NACK ^ 0xFF};
+  HAL_UART_Transmit(handle, msg, 3, TX_TIMEOUT_VALUE);
 }
 
 /*! \brief Validates the checksum of the message.
@@ -355,18 +354,18 @@ static uint8_t CheckChecksum(uint8_t *pBuffer, uint32_t len)
  */
 static void Erase(void)
 {
-    // Receive the number of pages to be erased (1 byte)
-    // the initial sector to erase  (1 byte)
-    // and the checksum             (1 byte)
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 3, TIMEOUT_VALUE) != HAL_OK);
+    // 1 Receive the number of pages to be erased (1 byte)
+    // 2 the initial sector to erase  (1 byte)
+    // 3 and the checksum             (1 byte)
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 4, TIMEOUT_VALUE) != HAL_OK);
     // validate checksum
-    if(CheckChecksum(pRxBuffer, 3) != 1)
+    if(CheckChecksum(pRxBuffer, 4) != 1)
     {
         Send_NACK(&huart1);
         return;
     }
-    
-    if(pRxBuffer[0] == 0xFF)
+
+    if(pRxBuffer[1] == 0xFF)
     {
         // global erase: not supported
         Send_NACK(&huart1);
@@ -377,10 +376,10 @@ static void Erase(void)
         EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
         
         // Set the number of sectors to erase
-        EraseInitStruct.NbPages = pRxBuffer[0]; // TODO change to constant
+        EraseInitStruct.NbPages = pRxBuffer[1]; // TODO change to constant
         
         // Set the initial sector to erase
-        EraseInitStruct.PageAddress = APPLICATION_START_ADDRESS;//pRxBuffer[1];
+        EraseInitStruct.PageAddress = APPLICATION_START_ADDRESS;//pRxBuffer[2];
         
         // contains the configuration information on faulty page in case of error
         // (0xFFFFFFFF means that all the pages have been correctly erased)
@@ -403,13 +402,13 @@ static void Write(void)
 {
     // Update Address START command
     // Receive the starting address, the number of bytes to be written and checksum 
-    // Address = 4 bytes
-    // numBytes = 1 byte number of bytes to be written
-    // Checksum = 1 byte
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 6, TIMEOUT_VALUE) != HAL_OK);
+    // 1-4Address = 4 bytes
+    // 5numBytes = 1 byte number of bytes to be written
+    // 6Checksum = 1 byte
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 7, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum
-    if(CheckChecksum(pRxBuffer, 6) != 1)
+    if(CheckChecksum(pRxBuffer, 7) != 1)
     {
       // invalid checksum
       Send_NACK(&huart1);
@@ -421,17 +420,17 @@ static void Write(void)
     }
     
     // Set the starting address
-    uint32_t startingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
-                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
+    uint32_t startingAddress = pRxBuffer[1] + (pRxBuffer[2] << 8) 
+                    + (pRxBuffer[3] << 16) + (pRxBuffer[4] << 24);
 
     // set the number of bytes to be written
-    uint8_t numBytes = pRxBuffer[4];
+    uint8_t numBytes = pRxBuffer[5];
     
     // Receive the data
-    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+1, TIMEOUT_VALUE) != HAL_OK);
+    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+2, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum of received data
-    if(CheckChecksum(pRxBuffer, 5) != 1)
+    if(CheckChecksum(pRxBuffer, numBytes+2) != 1)
     {
       // invalid checksum
       Send_NACK(&huart1);
@@ -440,13 +439,13 @@ static void Write(void)
     
     // valid checksum at this point
     // Program flash with the data
-    uint8_t i = 0;
+    uint8_t i = 1;
     HAL_FLASH_Unlock();
     while(numBytes--)
     {
       HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, startingAddress, pRxBuffer[i] + (pRxBuffer[i+1] << 8));
-      startingAddress++;
-      i+=2;
+      startingAddress += 2;
+      i += 2;
     }
     HAL_FLASH_Lock();
     
@@ -458,19 +457,14 @@ static void Write(void)
  */
 static void Verify(void)
 {
-    uint32_t startingAddress = 0;
-    uint32_t endingAddress = 0;
-    uint32_t address;
-    uint32_t *data;
-    uint32_t crcResult;
-    
     // Receive the starting address and checksum
     // Address = 4 bytes
     // Checksum = 4 byte
-    while(HAL_UART_Receive(&huart1, pRxBuffer, 8, TIMEOUT_VALUE) != HAL_OK);
+    // packet Checksum = 1 byte
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 10, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum
-    if(CheckChecksum(pRxBuffer, 8) != 1)
+    if(CheckChecksum(pRxBuffer, 10) != 1)
     {
         // invalid checksum
         Send_NACK(&huart1);
@@ -482,28 +476,26 @@ static void Verify(void)
     }
     
     // Set the starting address
-    startingAddress = pRxBuffer[0] + (pRxBuffer[1] << 8) 
-                    + (pRxBuffer[2] << 16) + (pRxBuffer[3] << 24);
+    uint32_t startingAddress = APPLICATION_START_ADDRESS;  
     
-    startingAddress = APPLICATION_START_ADDRESS;
-                    
-    const uint32_t FLASH_START_ADDRESS = 0x08004000U; // Flash start address
-    const uint32_t FLASH_LENGTH = 0x00004000U; // Flash size                
-    endingAddress = 0x08007FFFU;
-    startingAddress = 0x08004000U;
+    startingAddress = pRxBuffer[1] + (pRxBuffer[2] << 8) 
+                    + (pRxBuffer[3] << 16) + (pRxBuffer[4] << 24);
+       
+    uint32_t endingAddress = 0x08007FFFU;
     
-    data = (uint32_t *)((__IO uint32_t*) startingAddress);
-    for(address = startingAddress; address < endingAddress; address += 4)    
+    uint32_t * data = (uint32_t *)((__IO uint32_t*) startingAddress);
+    uint32_t crcResult;
+    for(uint32_t address = startingAddress; address < endingAddress; address += 4)    
     {
         data = (uint32_t *)((__IO uint32_t*) address);
         crcResult = HAL_CRC_Accumulate(&hcrc, data, 1);
     }    
     
-    HAL_UART_Transmit(&huart1, (uint8_t*) &crcResult, 4, 100);
+    //HAL_UART_Transmit(&huart1, (uint8_t*) &crcResult, 4, 100);
     
-    uint32_t crc32_flash = crc_32_update((uint8_t*) FLASH_START_ADDRESS,FLASH_LENGTH);
-    
-    HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 100);
+    uint32_t crc32_flash = crc_32_update((uint8_t*) APPLICATION_START_ADDRESS, APPLICATION_LENGTH);
+   
+    //HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 100);
     
     if(crcResult == 0x00)
     {
@@ -616,7 +608,6 @@ static uint8_t CheckMaintenance(uint8_t * pBuffer)
   
   return 1;
 }
-
 
 /* USER CODE END 4 */
 
