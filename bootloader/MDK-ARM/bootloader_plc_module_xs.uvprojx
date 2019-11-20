@@ -274,7 +274,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x2000</Size>
+                <Size>0x4000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -425,6 +425,11 @@
               <FileName>stm32f0xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f0xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32_uid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\stm32_uid.c</FilePath>
             </File>
           </Files>
         </Group>

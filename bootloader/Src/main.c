@@ -12,6 +12,7 @@
 /* USER CODE BEGIN Includes */
 #include "circular_buffer.h"
 #include "plc_greenlight_protocol.h"
+#include "stm32_uid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -142,8 +143,9 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
+  
   /* USER CODE BEGIN Init */
+  Init_UUID();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -160,34 +162,26 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
   
+  uint8_t ret_carr[2] = "\r\n";  
+  HAL_UART_Transmit(&huart1, (uint8_t*) &(STM32_UUID_ADDR[0]), 4, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) &(STM32_UUID_ADDR[1]), 4, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) &(STM32_UUID_ADDR[2]), 4, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100); 
+  
+  HAL_Delay(1000);
+  
+  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.x, 2, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.y, 2, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.Wafer, 1, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) &Signature.Lot, 7, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*) ret_carr, 2, 100);
+  
   HAL_Delay(5000);
   
-  Check(); 
-  
-//  uint16_t data = 0x6666;
-//  
-//  HAL_FLASH_Unlock();
-//      //HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, 0x08001FE0U, data);
-//  HAL_FLASH_Lock();
-//  
-//  uint16_t * data0 = (uint16_t *)((__IO uint16_t*) 0x08001FE0U);
-
-  
-//  FLASH_OBProgramInitTypeDef FLASH_RDP;
-//  HAL_FLASHEx_OBGetConfig(&FLASH_RDP);
-//  if (  FLASH_RDP.RDPLevel == OB_RDP_LEVEL_0 )
-//  {
-//    HAL_FLASH_Unlock();
-//    HAL_FLASH_OB_Unlock();
-//    FLASH_RDP.RDPLevel = OB_RDP_LEVEL_1;
-//    FLASH_RDP.OptionType = OPTIONBYTE_RDP;
-//    HAL_FLASHEx_OBErase();
-//    HAL_FLASHEx_OBProgram(&FLASH_RDP); 
-//    HAL_FLASH_OB_Launch();
-//    HAL_FLASH_OB_Lock();
-//    HAL_FLASH_Lock(); 
-//  }
-  
+  //Check(); 
+  while(1) {}
   /* Hookup Host and Target                           */
   /* First send an ACK. Host should reply with ACK    */
   /* If no valid ACK is received within TIMEOUT_VALUE */
@@ -382,9 +376,6 @@ static uint8_t CheckChecksum(uint8_t *pBuffer, uint32_t len)
  */
 static void Erase(void)
 {
-    //Flash_EraseInitTypeDef flashEraseConfig;
-    //uint32_t sectorError;
-    
     // Receive the number of pages to be erased (1 byte)
     // the initial sector to erase  (1 byte)
     // and the checksum             (1 byte)
@@ -412,16 +403,17 @@ static void Erase(void)
         // Set the initial sector to erase
         EraseInitStruct.PageAddress = APPLICATION_START_ADDRESS;//pRxBuffer[1];
         
-        uint32_t SectorError = 0;
-      
+        // contains the configuration information on faulty page in case of error
+        // (0xFFFFFFFF means that all the pages have been correctly erased)
+        uint32_t PageError = 0; 
+  
         // perform erase
         HAL_FLASH_Unlock();
-        //__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR); 
-        HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError);
-
+        //__HAL_FLASH_CLEAR_FLAG(FLASH_SR_EOP | FLASH_SR_WRPERR | FLASH_SR_PGERR); 
+        HAL_FLASHEx_Erase(&EraseInitStruct, &PageError); // TODO check HAL_OK output
         HAL_FLASH_Lock();
         
-        Send_ACK(&huart1);
+        Send_ACK(&huart1); // Erasing finished successfully
     }
 }
 
@@ -476,9 +468,9 @@ static void Write(void)
     HAL_FLASH_Unlock();
     while(numBytes--)
     {
-        HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, startingAddress, pRxBuffer[i] + (pRxBuffer[i+1] << 8));
-        startingAddress++;
-        i+=2; 
+      HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, startingAddress, pRxBuffer[i] + (pRxBuffer[i+1] << 8));
+      startingAddress++;
+      i+=2;
     }
     HAL_FLASH_Lock();
     
