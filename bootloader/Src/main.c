@@ -143,11 +143,12 @@ int main(void)
   remapMemToSRAM();
   /* USER CODE END 1 */
   
+
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-  
+
   /* USER CODE BEGIN Init */
   Init_UUID();
   /* USER CODE END Init */
@@ -170,19 +171,23 @@ int main(void)
   /* First send a Maintenance packet. Host should reply with ACK    */
   /* If no valid packet is received within TIMEOUT_VALUE            */
   /* then jump to main application                                  */
-  if(HAL_UART_Receive(&huart1, pRxBuffer, 2, TIMEOUT_VALUE) != HAL_OK)
+  if(HAL_UART_Receive(&huart1, pRxBuffer, MAINTENANCE_PACKET_SIZE, TIMEOUT_VALUE*100) != HAL_OK)
   {
-    JumpToApplication();
+    //JumpToApplication();
   }
   // wait for the Maintenance packet with UID of this uC
   if(CheckMaintenance(pRxBuffer) != 1)
   {
-    JumpToApplication();
+    Send_NACK(&huart1);
+    //JumpToApplication();
   }
-  Send_ACK(&huart1);
+  else
+  {
+    Send_ACK(&huart1);
+  }
   /* At this point, hookup communication is complete */
   /* Wait for commands and execute accordingly       */
-  
+  while(1) {}
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -555,7 +560,7 @@ uint32_t crc_32_update(uint8_t *data, uint32_t length)
   // Process 8-bits at a time
   while(length > 0) 
   {
-    crc32 = (crc32 >> 8) ^ crc32_tbl[( crc32 ^ (*tmp) ) & 0xFF];
+    crc32 = ((crc32 >> 8) & 0x00FFFFFF) ^ crc32_tbl[( crc32 ^ (*tmp) ) & 0xFF];
     // Increment data pointer and decrement length
     tmp++;
     length--;
@@ -574,27 +579,18 @@ static uint8_t CheckMaintenance(uint8_t * pBuffer)
   if (pBuffer[2] != MAINTENANCE_PACKET_HEAD_BYTE_2)
     return 0; //error
   
-  uint32_t packet_crc = crc_32_update(pBuffer, MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
-  
-  uint32_t rxed_crc = pRxBuffer[MAINTENANCE_PACKET_SIZE-4]
-                    + (pRxBuffer[MAINTENANCE_PACKET_SIZE-3] << 8) 
-                    + (pRxBuffer[MAINTENANCE_PACKET_SIZE-2] << 16) 
-                    + (pRxBuffer[MAINTENANCE_PACKET_SIZE-1] << 24);
-  if (rxed_crc != packet_crc)
-    return 0;
-  
-  uint32_t rxed_id_part1 = pRxBuffer[3]
-                    + (pRxBuffer[4]  << 8 ) 
-                    + (pRxBuffer[5]  << 16) 
-                    + (pRxBuffer[6]  << 24); 
-  uint32_t rxed_id_part2 = pRxBuffer[7]
-                    + (pRxBuffer[8]  << 8 ) 
-                    + (pRxBuffer[9]  << 16) 
-                    + (pRxBuffer[10] << 24); 
-  uint32_t rxed_id_part3 = pRxBuffer[3]
-                    + (pRxBuffer[11] << 8 ) 
-                    + (pRxBuffer[12] << 16) 
-                    + (pRxBuffer[13] << 24); 
+  uint32_t rxed_id_part1 = (pBuffer[3] << 0)
+                    + (pBuffer[4]  << 8 ) 
+                    + (pBuffer[5]  << 16) 
+                    + (pBuffer[6]  << 24); 
+  uint32_t rxed_id_part2 = (pBuffer[7] << 0)
+                    + (pBuffer[8]  << 8 ) 
+                    + (pBuffer[9]  << 16) 
+                    + (pBuffer[10] << 24); 
+  uint32_t rxed_id_part3 = (pBuffer[11] << 0)
+                    + (pBuffer[12] << 8 ) 
+                    + (pBuffer[13] << 16) 
+                    + (pBuffer[14] << 24); 
   
   if (rxed_id_part1 != Signature.idPart1)
     return 0;
@@ -603,9 +599,18 @@ static uint8_t CheckMaintenance(uint8_t * pBuffer)
   if (rxed_id_part3 != Signature.idPart3)
     return 0;
 
-  if (pRxBuffer[14] != 0x00 && pRxBuffer[14] != 0x00 && pRxBuffer[14] != 0x00)
+  if (pBuffer[15] != 0x00 && pBuffer[16] != 0x00 && pBuffer[17] != 0x00)
     return 0;
+
+  uint32_t packet_crc = crc_32_update(pBuffer, MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
   
+  uint32_t rxed_crc = (pBuffer[MAINTENANCE_PACKET_SIZE-4] << 24)
+                    + (pBuffer[MAINTENANCE_PACKET_SIZE-3] << 16) 
+                    + (pBuffer[MAINTENANCE_PACKET_SIZE-2] << 8) 
+                    + (pBuffer[MAINTENANCE_PACKET_SIZE-1] << 0);
+  if (rxed_crc != packet_crc)
+    return 0;  
+
   return 1;
 }
 
