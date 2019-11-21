@@ -43,7 +43,7 @@ void SystemClock_Config(void);
 #define APPLICATION_START_ADDRESS   0x08004000U
 #define APPLICATION_LENGTH          0x00004000U
 
-#define TIMEOUT_VALUE               SystemCoreClock/2000
+#define TIMEOUT_VALUE               SystemCoreClock/20
 #define TX_TIMEOUT_VALUE            1000
 
 #define ACK     0x06U
@@ -167,13 +167,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
 
-
-  Verify();
+  //JumpToApplication();
+  //Verify();
   /* Hookup Host and Target                                         */
   /* First send a Maintenance packet. Host should reply with ACK    */
   /* If no valid packet is received within TIMEOUT_VALUE            */
   /* then jump to main application                                  */
-  if(HAL_UART_Receive(&huart1, pRxBuffer, MAINTENANCE_PACKET_SIZE, TIMEOUT_VALUE*100) != HAL_OK)
+  if(HAL_UART_Receive(&huart1, pRxBuffer, MAINTENANCE_PACKET_SIZE, TIMEOUT_VALUE) != HAL_OK)
   {
     //JumpToApplication();
   }
@@ -189,12 +189,10 @@ int main(void)
   }
   /* At this point, hookup communication is complete */
   /* Wait for commands and execute accordingly       */
-  while(1) {}
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
   while (1)
   {
     /* USER CODE END WHILE */
@@ -308,7 +306,7 @@ static void JumpToApplication(void)
  */
 static void Send_ACK(UART_HandleTypeDef *handle)
 {
-  uint8_t msg[3] = {0x02, ACK, 0x02 ^ ACK ^ 0xFF};
+  uint8_t msg[3] = {0x02, ACK, 0x02 ^ ACK};
   HAL_UART_Transmit(handle, msg, 3, TX_TIMEOUT_VALUE);
 }
 
@@ -318,7 +316,7 @@ static void Send_ACK(UART_HandleTypeDef *handle)
  */
 static void Send_NACK(UART_HandleTypeDef *handle)
 {
-  uint8_t msg[3] = {0x02, NACK, 0x02 ^ NACK ^ 0xFF};
+  uint8_t msg[3] = {0x02, NACK, 0x02 ^ NACK};
   HAL_UART_Transmit(handle, msg, 3, TX_TIMEOUT_VALUE);
 }
 
@@ -427,32 +425,33 @@ static void Write(void)
     }
     
     // Set the starting address
-    uint32_t startingAddress = pRxBuffer[1] + (pRxBuffer[2] << 8) 
-                    + (pRxBuffer[3] << 16) + (pRxBuffer[4] << 24);
+    uint32_t startingAddress = ((uint32_t)pRxBuffer[1] << 24) + ((uint32_t)pRxBuffer[2] << 16) 
+                              + ((uint32_t)pRxBuffer[3] << 8) + ((uint32_t)pRxBuffer[4] << 0);
 
     // set the number of bytes to be written
     uint8_t numBytes = pRxBuffer[5];
     
     // Receive the data
-    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+2, TIMEOUT_VALUE) != HAL_OK);
+    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum of received data
-    if(CheckChecksum(pRxBuffer, numBytes+2) != 1)
+    if(CheckChecksum(pRxBuffer, numBytes) != 1)
     {
       // invalid checksum
-      Send_NACK(&huart1);
-      return;
+      //Send_NACK(&huart1);
+      //return;
     }
     
     // valid checksum at this point
     // Program flash with the data
-    uint8_t i = 1;
+    uint8_t i = 0;
     HAL_FLASH_Unlock();
-    while(numBytes--)
+    while(numBytes)
     {
       HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, startingAddress, pRxBuffer[i] + (pRxBuffer[i+1] << 8));
       startingAddress += 2;
       i += 2;
+      numBytes -= 2;
     }
     HAL_FLASH_Lock();
     
