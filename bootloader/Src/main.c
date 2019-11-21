@@ -181,7 +181,7 @@ int main(void)
   if(CheckMaintenance(pRxBuffer) != 1)
   {
     Send_NACK(&huart1);
-    //JumpToApplication();
+    JumpToApplication();
   }
   else
   {
