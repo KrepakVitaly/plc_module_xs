@@ -1,6 +1,8 @@
 #MicroXplorer Configuration settings - do not modify
-CRC.IPParameters=InputDataFormat
-CRC.InputDataFormat=CRC_INPUTDATA_FORMAT_WORDS
+CRC.IPParameters=InputDataFormat,InputDataInversionMode,OutputDataInversionMode
+CRC.InputDataFormat=CRC_INPUTDATA_FORMAT_BYTES
+CRC.InputDataInversionMode=CRC_INPUTDATA_INVERSION_BYTE
+CRC.OutputDataInversionMode=CRC_OUTPUTDATA_INVERSION_ENABLE
 File.Version=6
 KeepUserPlacement=false
 Mcu.Family=STM32F0
