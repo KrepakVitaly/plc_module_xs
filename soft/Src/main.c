@@ -38,7 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BOOT_FLAG_ADDRESS   0x08000000U
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -223,25 +223,24 @@ void SystemClock_Config(void)
 static void JumpToBootloader(void) 
 {
   HAL_TIM_Base_Stop(&htim1);
-#define BOOT_FLAG_ADDRESS   0x08000000U
 
-    if (((*(__IO uint32_t*)BOOT_FLAG_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
-    {
-        /* First, disable all IRQs */
-        __disable_irq();
+  if (((*(__IO uint32_t*)BOOT_FLAG_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
+  {
+    /* First, disable all IRQs */
+    __disable_irq();
 
-        /* Get the main application start address */
-        uint32_t jump_address = *(__IO uint32_t *)(BOOT_FLAG_ADDRESS + 4);
+    /* Get the main application start address */
+    uint32_t jump_address = *(__IO uint32_t *)(BOOT_FLAG_ADDRESS + 4);
 
-        /* Set the main stack pointer to to the application start address */
-        __set_MSP(*(__IO uint32_t *)BOOT_FLAG_ADDRESS);
+    /* Set the main stack pointer to to the application start address */
+    __set_MSP(*(__IO uint32_t *)BOOT_FLAG_ADDRESS);
 
-        // Create function pointer for the main application
-        void (*pmain_app)(void) = (void (*)(void))(jump_address);
+    // Create function pointer for the main application
+    void (*pmain_app)(void) = (void (*)(void))(jump_address);
 
-        // Now jump to the main application
-        pmain_app();
-    }
+    // Now jump to the main application
+    pmain_app();
+  }
 } 
 
 
