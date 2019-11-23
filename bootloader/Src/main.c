@@ -167,8 +167,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
 
-  //JumpToApplication();
-  //Verify();
   /* Hookup Host and Target                                         */
   /* First send a Maintenance packet. Host should reply with ACK    */
   /* If no valid packet is received within TIMEOUT_VALUE            */
@@ -482,7 +480,7 @@ static const uint32_t crc_table[0x100] = {
 uint32_t CalcCRC(uint8_t * pData, uint32_t DataLength)
 {
     uint32_t Checksum = 0xFFFFFFFF;
-    for(unsigned int i=0; i < DataLength; i++)
+    for(uint32_t i=0; i < DataLength; i++)
     {
         uint8_t top = (uint8_t)(Checksum >> 24);
         top ^= pData[i];
@@ -496,31 +494,35 @@ uint32_t CalcCRC(uint8_t * pData, uint32_t DataLength)
 static void Verify(void)
 {
     // Receive the starting address and checksum
-    // Address = 4 bytes
+    // AddressStart = 4 bytes
+    // AddressEnd = 4 bytes
     // Checksum = 4 byte
     // packet Checksum = 1 byte
-//    while(HAL_UART_Receive(&huart1, pRxBuffer, 10, TIMEOUT_VALUE) != HAL_OK);
-//    
-//    // Check checksum
-//    if(CheckChecksum(pRxBuffer, 10) != 1)
-//    {
-//        // invalid checksum
-//        Send_NACK(&huart1);
-//        return;
-//    }
-//    else
-//    {
-//        Send_ACK(&huart1);
-//    }
+    while(HAL_UART_Receive(&huart1, pRxBuffer, 14, TIMEOUT_VALUE) != HAL_OK);
+    
+    // Check checksum
+    if(CheckChecksum(pRxBuffer, 14) != 1)
+    {
+        // invalid checksum
+        Send_NACK(&huart1);
+        return;
+    }
+    else
+    {
+        Send_ACK(&huart1);
+    }
     
     // Set the starting address
-    uint32_t startingAddress = APPLICATION_START_ADDRESS;  
+    // APPLICATION_START_ADDRESS
+    // 0x08004E0CU
+    uint32_t startingAddress = ((uint32_t)pRxBuffer[1] << 24) + ((uint32_t)pRxBuffer[2] << 16) 
+                             + ((uint32_t)pRxBuffer[3] << 8 ) + ((uint32_t)pRxBuffer[4] << 0);
+   
+    uint32_t endingAddress = ((uint32_t)pRxBuffer[5] << 24) + ((uint32_t) pRxBuffer[6] << 16) 
+                           + ((uint32_t)pRxBuffer[7] << 8 ) + ((uint32_t)pRxBuffer[8] << 0 );
     
-    startingAddress = pRxBuffer[1] + (pRxBuffer[2] << 8) 
-                    + (pRxBuffer[3] << 16) + (pRxBuffer[4] << 24);
-    startingAddress    = APPLICATION_START_ADDRESS;
-    
-    uint32_t endingAddress = 0x08008000U;
+    uint32_t correct_checksum = ((uint32_t)pRxBuffer[9] << 0) + ((uint32_t)pRxBuffer[10] << 8) 
+                              + ((uint32_t)pRxBuffer[11] << 16) + ((uint32_t)pRxBuffer[12] << 24 );
     
     uint8_t * data = (uint8_t *)((__IO uint8_t*) startingAddress);
     uint32_t crcResult;
@@ -530,22 +532,27 @@ static void Verify(void)
         crcResult = HAL_CRC_Accumulate(&hcrc, (uint32_t*)data, 1);
     }    
     
-    HAL_UART_Transmit(&huart1, (uint8_t*) &crcResult, 4, 100);
+    HAL_UART_Transmit(&huart1, (uint8_t*) &crcResult, 4, 1000);
     
-    uint32_t crc32_flash = CalcCRC((uint8_t*) APPLICATION_START_ADDRESS, APPLICATION_LENGTH);
+    uint32_t crc32_flash = CalcCRC((uint8_t*) startingAddress, endingAddress-startingAddress);
    
-    HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 100);
+    HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 1000);
     
-    if(crcResult == 0x00)
+    crc32_flash = crc_32_update((uint8_t*) startingAddress, endingAddress-startingAddress);
+   
+    HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 1000);
+    
+    if(crcResult == correct_checksum)
     {
-        //Send_ACK(&huart1);
+        Send_ACK(&huart1);
     }
     else
     {
-        //Send_NACK(&huart1);
+        Send_NACK(&huart1);
     }
     
-    JumpToApplication();
+    //JumpToApplication();
+    return;
 }
 
 
