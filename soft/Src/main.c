@@ -60,7 +60,6 @@ uint8_t volt_g = 0;
 uint8_t amps_g = 0;
 uint8_t temp_g = 0;
 
-
 CircularBuffer_Typedef kq130_buf;
 uint8_t packet_analyze_buf[PACKET_SIZE];
 uint8_t new_byte_received = 0;
@@ -69,17 +68,6 @@ uint8_t new_byte_received = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void InitData(void);
-
-
-// for manual PWM without TIMER
-//#pragma GCC push_options
-//#pragma GCC optimize ("O0")
-//void delayUS(uint32_t us) {
-//	volatile uint32_t counter = 1*us;
-//	while(counter--);
-//}
-//#pragma GCC pop_options
  
 /**Force VectorTable to specific memory position defined in linker*/
 volatile uint32_t VectorTable[48] __attribute__((section(".RAMVectorTable")));
@@ -162,11 +150,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     //Receive 1 byte from KQ130F
-    //if (new_byte_received == 0)
-    {
-      HAL_UART_Receive_IT(&huart1, &plc_uart_buf, 1);
-      //continue;
-    }
+    HAL_UART_Receive_IT(&huart1, &plc_uart_buf, 1);
     // if there is a chance to contain full packet plc_circular_buf_data_size
     // must be greater or equal than PACKET_SIZE
     uint16_t len = CircularBuffer_GetLength(&kq130_buf);
@@ -175,24 +159,16 @@ int main(void)
     {
       new_byte_received = 0;
       CircularBuffer_GetLastNValues(&kq130_buf, packet_analyze_buf, PACKET_SIZE);
-      //for (int i = 0; i < len - PACKET_SIZE + 1; i++) 
-      { 
-        if (IsValidMaintenancePacket(packet_analyze_buf))
-        {
-          ProceedMaintenanceCmd(packet_analyze_buf);
-          CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
-        }
-        else if (IsValidRegularPacket(packet_analyze_buf))
-        {
-          ProceedRegularCmd(packet_analyze_buf);
-          CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
-        }
+      if (IsValidMaintenancePacket(packet_analyze_buf))
+      {
+        ProceedMaintenanceCmd(packet_analyze_buf);
+        CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
       }
-    }
-    else //if packet was not found, clear the previous byte
-    {
-      //CircularBuffer_RemoveFirstValue(&kq130_buf);
-      //break;
+      else if (IsValidRegularPacket(packet_analyze_buf))
+      {
+        ProceedRegularCmd(packet_analyze_buf);
+        CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
+      }
     }
   }
   /* USER CODE END 3 */
