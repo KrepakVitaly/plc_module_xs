@@ -130,7 +130,7 @@ int main(void)
   
   // Start Timer for ADC flag
   HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
-  HAL_TIM_Base_Start_IT(&htim3); // Update UART Rx IT ();
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   
   CircularBuffer_Init(&kq130_buf);
   HAL_TIM_Base_Start_IT(&htim1);  
