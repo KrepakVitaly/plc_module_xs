@@ -433,16 +433,23 @@ static void Write(void)
     // Receive the data
     while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+2, TIMEOUT_VALUE) != HAL_OK);
     
+    uint8_t checksum_intel = 0;
+    for (uint8_t i = 1; i <= numBytes; i++)
+      checksum_intel += pRxBuffer[i];
+    
+    checksum_intel += numBytes;
+    checksum_intel += (uint8_t)((startingAddress >> 8)& 0x000000FF);
+    checksum_intel += (uint8_t)(startingAddress & 0x000000FF);
+    checksum_intel += pRxBuffer[numBytes+1];
+    
+   // checksum_intel = ~checksum_intel;
+  
     // Check checksum of received data
-    if(CheckChecksum(pRxBuffer, numBytes+2) != 1)
+    if(checksum_intel != 0x00)
     {
       // invalid checksum
       Send_NACK(&huart1);
       //return;
-    }
-    else
-    {
-      Send_NACK(&huart1);
     }
     
     // valid checksum at this point
