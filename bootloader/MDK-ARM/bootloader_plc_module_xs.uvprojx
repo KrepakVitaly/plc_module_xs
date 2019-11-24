@@ -392,11 +392,6 @@
           <GroupName>Application/User</GroupName>
           <Files>
             <File>
-              <FileName>stm32_uid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\stm32_uid.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/main.c</FilePath>
@@ -430,6 +425,11 @@
               <FileName>stm32f0xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f0xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32_uid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\stm32_uid.c</FilePath>
             </File>
           </Files>
         </Group>

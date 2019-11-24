@@ -57,6 +57,10 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+#define BOOT_FLAG_ADDRESS   0x08000000U
+#define FW_START_ADDR       0x08004000U
+
+
 
 /* USER CODE END EM */
 
@@ -64,7 +68,12 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+extern uint16_t status_g;
+extern uint8_t brightness_g;
+extern uint8_t volt_g;
+extern uint8_t amps_g;
+extern uint8_t temp_g;
+void JumpToBootloader(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -78,8 +87,6 @@ void Error_Handler(void);
 #define PWM_GPIO_Port GPIOA
 #define LED2_Pin GPIO_PIN_7
 #define LED2_GPIO_Port GPIOA
-#define LED1_ONOFF_Pin GPIO_PIN_1
-#define LED1_ONOFF_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

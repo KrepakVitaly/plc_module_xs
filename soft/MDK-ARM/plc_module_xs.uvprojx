@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32F031x6,USE_FULL_LL_DRIVER,USE_HAL_DRIVER,USE_HAL_DRIVER,STM32F031x6</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;      ../Drivers/STM32F0xx_HAL_Driver/Inc;      ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy;      ../Drivers/CMSIS/Device/ST/STM32F0xx/Include;      ../Drivers/CMSIS/Include;      ..\..\..\plc_greenlight_protocol\Inc</IncludePath>
+              <IncludePath>../Inc;        ../Drivers/STM32F0xx_HAL_Driver/Inc;        ../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy;        ../Drivers/CMSIS/Device/ST/STM32F0xx/Include;        ../Drivers/CMSIS/Include;        ..\..\..\plc_greenlight_protocol\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -420,6 +420,21 @@
               <FileName>stm32f0xx_hal_plc_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\plc_greenlight_protocol\Src\stm32f0xx_hal_plc_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>plc_mmrpi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\plc_mmrpi.c</FilePath>
+            </File>
+            <File>
+              <FileName>dali_interface_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\dali_interface_lib.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32_uid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\plc_greenlight_protocol\Src\stm32_uid.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>

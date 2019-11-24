@@ -43,7 +43,8 @@ void SystemClock_Config(void);
 #define APPLICATION_START_ADDRESS   0x08004000U
 #define APPLICATION_LENGTH          0x00004000U
 
-#define TIMEOUT_VALUE               SystemCoreClock/20
+#define TIMEOUT_VALUE               SystemCoreClock/3200
+#define START_TIMEOUT_VALUE         SystemCoreClock/1600
 #define TX_TIMEOUT_VALUE            1000
 
 #define ACK     0x06U
@@ -171,9 +172,9 @@ int main(void)
   /* First send a Maintenance packet. Host should reply with ACK    */
   /* If no valid packet is received within TIMEOUT_VALUE            */
   /* then jump to main application                                  */
-  if(HAL_UART_Receive(&huart1, pRxBuffer, MAINTENANCE_PACKET_SIZE, TIMEOUT_VALUE) != HAL_OK)
+  if(HAL_UART_Receive(&huart1, pRxBuffer, MAINTENANCE_PACKET_SIZE, START_TIMEOUT_VALUE) != HAL_OK)
   {
-    //JumpToApplication();
+    JumpToApplication();
   }
   // wait for the Maintenance packet with UID of this uC
   if(CheckMaintenance(pRxBuffer) != 1)
@@ -430,19 +431,23 @@ static void Write(void)
     uint8_t numBytes = pRxBuffer[5];
     
     // Receive the data
-    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes, TIMEOUT_VALUE) != HAL_OK);
+    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+2, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum of received data
-    if(CheckChecksum(pRxBuffer, numBytes) != 1)
+    if(CheckChecksum(pRxBuffer, numBytes+2) != 1)
     {
       // invalid checksum
-      //Send_NACK(&huart1);
+      Send_NACK(&huart1);
       //return;
+    }
+    else
+    {
+      Send_NACK(&huart1);
     }
     
     // valid checksum at this point
     // Program flash with the data
-    uint8_t i = 0;
+    uint8_t i = 1;
     HAL_FLASH_Unlock();
     while(numBytes)
     {
@@ -534,13 +539,13 @@ static void Verify(void)
     
     HAL_UART_Transmit(&huart1, (uint8_t*) &crcResult, 4, 1000);
     
-    uint32_t crc32_flash = CalcCRC((uint8_t*) startingAddress, endingAddress-startingAddress);
+    //uint32_t crc32_flash = CalcCRC((uint8_t*) startingAddress, endingAddress-startingAddress);
    
-    HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 1000);
+    //HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 1000);
     
-    crc32_flash = crc_32_update((uint8_t*) startingAddress, endingAddress-startingAddress);
+    //crc32_flash = crc_32_update((uint8_t*) startingAddress, endingAddress-startingAddress);
    
-    HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 1000);
+    //HAL_UART_Transmit(&huart1, (uint8_t*) &crc32_flash, 4, 1000);
     
     if(crcResult == correct_checksum)
     {

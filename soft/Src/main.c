@@ -28,7 +28,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stm32_uid.h"
 #include "plc_greenlight_protocol.h"
+#include "stm32f0xx_hal_plc_uart.h"
+#include "circular_buffer.h"
+#include "plc_mmrpi.h"
+#include "dali_interface_lib.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,7 +43,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define BOOT_FLAG_ADDRESS   0x08000000U
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,7 +54,16 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-const uint32_t test_variable_for_store = 0x555;
+uint16_t status_g = 0;
+uint8_t brightness_g = 0;
+uint8_t volt_g = 0;
+uint8_t amps_g = 0;
+uint8_t temp_g = 0;
+
+
+CircularBuffer_Typedef kq130_buf;
+uint8_t packet_analyze_buf[PACKET_SIZE];
+uint8_t new_byte_received = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,20 +73,16 @@ void InitData(void);
 
 
 // for manual PWM without TIMER
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-void delayUS(uint32_t us) {
-	volatile uint32_t counter = 1*us;
-	while(counter--);
-}
-#pragma GCC pop_options
-
-#define FW_START_ADDR 0x08004000U
+//#pragma GCC push_options
+//#pragma GCC optimize ("O0")
+//void delayUS(uint32_t us) {
+//	volatile uint32_t counter = 1*us;
+//	while(counter--);
+//}
+//#pragma GCC pop_options
  
 /**Force VectorTable to specific memory position defined in linker*/
 volatile uint32_t VectorTable[48] __attribute__((section(".RAMVectorTable")));
-
-static void JumpToBootloader(void);
 
 void remapMemToSRAM( void )
 {
@@ -103,6 +113,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
   remapMemToSRAM();
   /* USER CODE END 1 */
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -110,7 +121,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  Init_UUID();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -122,22 +133,24 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_ADC_Init();
-  //MX_CRC_Init();
-  //MX_TIM1_Init();
-  //MX_TIM3_Init();
-  //MX_USART1_UART_Init();
+  MX_ADC_Init();
+  MX_CRC_Init();
+  MX_TIM1_Init();
+  MX_TIM3_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   
-  //InitData(); //plc_node
-  
-  
   // Start Timer for ADC flag
-  //HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
-  //HAL_TIM_Base_Start_IT(&htim3); // Update UART Rx IT ();
+  HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
+  HAL_TIM_Base_Start_IT(&htim3); // Update UART Rx IT ();
   
-  // HAL_PLC_Receive_IT (PLC handler)
-  // HAL_UART_Receive_IT(&huart1, buf, ONE_BYTE);
+  CircularBuffer_Init(&kq130_buf);
+  HAL_TIM_Base_Start_IT(&htim1);  
+  HAL_TIM_Base_Start_IT(&htim3);
+  
+  HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 
@@ -148,28 +161,39 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    for (uint8_t i = 0; i < 20; i++)
+    //Receive 1 byte from KQ130F
+    //if (new_byte_received == 0)
     {
-      HAL_Delay(100);
-      HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+      HAL_UART_Receive_IT(&huart1, &plc_uart_buf, 1);
+      //continue;
     }
-    JumpToBootloader();
-    /*
-    if (PLC_Node_Repeater_Packet(plc_node) == TRUE)    //TODO: make it atomic! repeater.Enabled == 1 && 
-    {
-       Repeat Packet To Next Domain (plc_node);
-       Wait For Answer (plc_node);
-       if needed RepeatAnswer (plc_node);
-    }
-    */
+    // if there is a chance to contain full packet plc_circular_buf_data_size
+    // must be greater or equal than PACKET_SIZE
+    uint16_t len = CircularBuffer_GetLength(&kq130_buf);
     
-    /*
-    if (PLC_Node_Slave_Packet(plc_node) == TRUE)
+    if (len >= REGULAR_PACKET_SIZE || len >= MAINTENANCE_PACKET_SIZE) 
     {
-      ProcessingPacket(plc_node);
-      SendAnswer(plc_node);
+      new_byte_received = 0;
+      CircularBuffer_GetLastNValues(&kq130_buf, packet_analyze_buf, PACKET_SIZE);
+      //for (int i = 0; i < len - PACKET_SIZE + 1; i++) 
+      { 
+        if (IsValidMaintenancePacket(packet_analyze_buf))
+        {
+          ProceedMaintenanceCmd(packet_analyze_buf);
+          CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
+        }
+        else if (IsValidRegularPacket(packet_analyze_buf))
+        {
+          ProceedRegularCmd(packet_analyze_buf);
+          CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
+        }
+      }
     }
-    */
+    else //if packet was not found, clear the previous byte
+    {
+      //CircularBuffer_RemoveFirstValue(&kq130_buf);
+      //break;
+    }
   }
   /* USER CODE END 3 */
 }
@@ -218,9 +242,9 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-/*! \brief Jumps to the main application.
+/*! \brief Jumps to the bootloader.
  */
-static void JumpToBootloader(void) 
+void JumpToBootloader(void) 
 {
   HAL_TIM_Base_Stop(&htim1);
 
@@ -243,47 +267,29 @@ static void JumpToBootloader(void)
   }
 } 
 
-
-void InitData (void)
-{
-  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
-  //HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_RESET);
-  
-  // Read data from EEPROM
-  // init with this values PLC slave, PLC repeater structures
-}
-
-/*
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim3)
 	{	
-    send = 1; //start send DALI cmd
+
 	}
   if (htim == &htim1) 
 	{	
-    if (send == 1)
-    {
-      //send = step_DALI_set_brightness(&dali_cntr); //if cmd was sent, send = 0
-    }
+
 	}
 }
-*/
 
 
-/*
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)	
   {
-    HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
     CircularBuffer_Put_OW(&kq130_buf, plc_uart_buf);
     new_byte_received = 1;
   }
 }
-*/
+
 
 /* USER CODE END 4 */
 
