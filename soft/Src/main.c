@@ -126,20 +126,26 @@ int main(void)
   MX_ADC_Init();
   MX_CRC_Init();
   MX_TIM1_Init();
-  MX_TIM3_Init();
   MX_USART1_UART_Init();
+  MX_TIM14_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+  
   
   // Start Timer for ADC flag
-  //HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
- // HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
+  //HAL_TIM_PWM_Start_IT(&htim3, TIM_CHANNEL_4);
+  HAL_TIM_Base_Start_IT(&htim14); // Offline Detection Sensor; 
+  
+  user_pwm_setvalue(0);
   
   CircularBuffer_Init(&kq130_buf);
   
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
-
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -161,8 +167,7 @@ int main(void)
       //HAL_FLASH_Unlock();
       //HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_ADDR_FOR_STORING+sizeof(uint32_t)*OFFLINE_OFFSET, (uint32_t)Signature.Offline);
       //HAL_FLASH_Lock();
-      
-      
+
       new_byte_received = 0;
       CircularBuffer_GetLastNValues(&kq130_buf, packet_analyze_buf, PACKET_SIZE);
       if (IsValidMaintenancePacket(packet_analyze_buf))
@@ -251,11 +256,12 @@ void JumpToBootloader(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if (htim == &htim3)
-	{	
-    //PWM
-	}
   if (htim == &htim1) 
+	{	
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+	}
+  
+  if (htim == &htim14)  // Offline detector
 	{	
     //HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 	}
