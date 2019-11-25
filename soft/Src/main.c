@@ -110,6 +110,8 @@ int main(void)
 
   /* USER CODE BEGIN Init */
   Init_UUID();
+  for (uint8_t i = 0; i < PACKET_SIZE; i++)
+    packet_analyze_buf[i] = 0;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -129,12 +131,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   
   // Start Timer for ADC flag
-  HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
+  //HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
+ // HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
   
   CircularBuffer_Init(&kq130_buf);
-  HAL_TIM_Base_Start_IT(&htim1);  
-  HAL_TIM_Base_Start_IT(&htim3);
   
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_SET);
@@ -155,7 +155,7 @@ int main(void)
     // must be greater or equal than PACKET_SIZE
     uint16_t len = CircularBuffer_GetLength(&kq130_buf);
     
-    if (len >= REGULAR_PACKET_SIZE || len >= MAINTENANCE_PACKET_SIZE) 
+    if (len >= PACKET_SIZE && new_byte_received == 1) 
     {
       new_byte_received = 0;
       CircularBuffer_GetLastNValues(&kq130_buf, packet_analyze_buf, PACKET_SIZE);
@@ -166,6 +166,7 @@ int main(void)
       }
       else if (IsValidRegularPacket(packet_analyze_buf))
       {
+        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
         ProceedRegularCmd(packet_analyze_buf);
         CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
       }
@@ -247,11 +248,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim3)
 	{	
-
+    //PWM
 	}
   if (htim == &htim1) 
 	{	
-
+    //HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 	}
 }
 
@@ -260,7 +261,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)	
   {
-    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    
     CircularBuffer_Put_OW(&kq130_buf, plc_uart_buf);
     new_byte_received = 1;
   }

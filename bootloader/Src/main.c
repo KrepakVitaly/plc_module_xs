@@ -44,7 +44,7 @@ void SystemClock_Config(void);
 #define APPLICATION_LENGTH          0x00004000U
 
 #define TIMEOUT_VALUE               SystemCoreClock/3200
-#define START_TIMEOUT_VALUE         SystemCoreClock/1600
+#define START_TIMEOUT_VALUE         SystemCoreClock/3200
 #define TX_TIMEOUT_VALUE            1000
 
 #define ACK     0x06U
@@ -469,6 +469,7 @@ static void Write(void)
     Send_ACK(&huart1);
 }
 
+
 /*! \brief Verify flashed image checksum
  */
 static void Verify(void)
@@ -503,6 +504,10 @@ static void Verify(void)
                               + ((uint32_t)pRxBuffer[11] << 16) + ((uint32_t)pRxBuffer[12] << 24 );
     
     uint8_t * data = (uint8_t *)((__IO uint8_t*) startingAddress);
+    
+    /* Reset CRC Calculation Unit (hcrc->Instance->INIT is 
+    *  written in hcrc->Instance->DR) */
+    __HAL_CRC_DR_RESET(&hcrc);
     uint32_t crcResult;
     for(uint32_t address = startingAddress; address < endingAddress; address += 1)    
     {
@@ -563,7 +568,14 @@ static uint8_t CheckMaintenance(uint8_t * pBuffer)
   if (pBuffer[15] != 0x05 && pBuffer[16] != 0x00 && pBuffer[17] != 0x00)
     return 0;
 
-  uint32_t packet_crc = crc_32_update(pBuffer, MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
+  
+  /* Reset CRC Calculation Unit (hcrc->Instance->INIT is 
+  *  written in hcrc->Instance->DR) */
+  __HAL_CRC_DR_RESET(&hcrc);
+  
+  uint32_t packet_crc = HAL_CRC_Calculate(&hcrc, 
+                        (uint32_t*)pBuffer, 
+                        MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
   
   uint32_t rxed_crc = (pBuffer[MAINTENANCE_PACKET_SIZE-4] << 24)
                     + (pBuffer[MAINTENANCE_PACKET_SIZE-3] << 16) 
