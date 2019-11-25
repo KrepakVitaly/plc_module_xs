@@ -166,7 +166,6 @@ int main(void)
       }
       else if (IsValidRegularPacket(packet_analyze_buf))
       {
-        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
         ProceedRegularCmd(packet_analyze_buf);
         CircularBuffer_RemoveLastNValues(&kq130_buf, PACKET_SIZE); //packet was read and throwed away
       }
