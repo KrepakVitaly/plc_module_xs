@@ -157,6 +157,12 @@ int main(void)
     
     if (len >= PACKET_SIZE && new_byte_received == 1) 
     {
+      //Signature.Offline = 0;
+      //HAL_FLASH_Unlock();
+      //HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_ADDR_FOR_STORING+sizeof(uint32_t)*OFFLINE_OFFSET, (uint32_t)Signature.Offline);
+      //HAL_FLASH_Lock();
+      
+      
       new_byte_received = 0;
       CircularBuffer_GetLastNValues(&kq130_buf, packet_analyze_buf, PACKET_SIZE);
       if (IsValidMaintenancePacket(packet_analyze_buf))
