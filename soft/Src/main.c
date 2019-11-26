@@ -56,9 +56,10 @@
 /* USER CODE BEGIN PV */
 uint16_t status_g = 0;
 uint8_t brightness_g = 0;
-uint8_t volt_g = 0;
-uint8_t amps_g = 0;
-uint8_t temp_g = 0;
+uint16_t volt_g = 0;
+uint16_t amps_g = 0;
+uint16_t temp_g = 0;
+uint32_t time_seconds = 0;
 
 CircularBuffer_Typedef kq130_buf;
 uint8_t packet_analyze_buf[PACKET_SIZE];
@@ -85,6 +86,9 @@ void remapMemToSRAM( void )
  
     __enable_irq();
 }
+
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -131,11 +135,9 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
-  
-  
+
   // Start Timer for ADC flag
   HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
-  //HAL_TIM_PWM_Start_IT(&htim3, TIM_CHANNEL_4);
   HAL_TIM_Base_Start_IT(&htim14); // Offline Detection Sensor; 
   
   user_pwm_setvalue(0);
@@ -143,7 +145,7 @@ int main(void)
   CircularBuffer_Init(&kq130_buf);
   
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
   
   /* USER CODE END 2 */
@@ -163,6 +165,7 @@ int main(void)
     
     if (len >= PACKET_SIZE && new_byte_received == 1) 
     {
+      time_seconds = TIME_WAIT_OFFLINE*2;
       //Signature.Offline = 0;
       //HAL_FLASH_Unlock();
       //HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_ADDR_FOR_STORING+sizeof(uint32_t)*OFFLINE_OFFSET, (uint32_t)Signature.Offline);
@@ -234,6 +237,8 @@ void SystemClock_Config(void)
 void JumpToBootloader(void) 
 {
   HAL_TIM_Base_Stop(&htim1);
+  HAL_TIM_Base_Stop(&htim14);
+  HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
 
   if (((*(__IO uint32_t*)BOOT_FLAG_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
   {
@@ -254,13 +259,31 @@ void JumpToBootloader(void)
   }
 } 
 
+
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+  if (htim == &htim1)
+  {
+    volt_g = (get_volts_value());
+    amps_g = (get_amps_value());
+    temp_g = (get_temp_value());
+  }
   if (htim == &htim14) // Offline detector
 	{	
-    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    
+    if (time_seconds <= TIME_WAIT_OFFLINE)
+    {
+      time_seconds += 1;
+      HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+    }
+    
+    if (time_seconds == TIME_WAIT_OFFLINE)
+    {
+      brightness_g = 255;
+      user_pwm_setvalue(brightness_g);
+    }
 	}
- 
 }
 
 
@@ -268,7 +291,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &huart1)	
   {
-    
+    HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
     CircularBuffer_Put_OW(&kq130_buf, plc_uart_buf);
     new_byte_received = 1;
   }

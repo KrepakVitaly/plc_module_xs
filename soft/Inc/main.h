@@ -60,7 +60,11 @@ extern "C" {
 #define BOOT_FLAG_ADDRESS   0x08000000U
 #define FW_START_ADDR       0x08004000U
 
+#define TIME_WAIT_OFFLINE   1800
 
+#define AMPS_SIGNAL  ADC_CHANNEL_4
+#define VOLTS_SIGNAL ADC_CHANNEL_0
+#define TEMP_SIGNAL ADC_CHANNEL_5
 
 /* USER CODE END EM */
 
@@ -70,9 +74,9 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 extern uint16_t status_g;
 extern uint8_t brightness_g;
-extern uint8_t volt_g;
-extern uint8_t amps_g;
-extern uint8_t temp_g;
+extern uint16_t volt_g;
+extern uint16_t amps_g;
+extern uint16_t temp_g;
 void JumpToBootloader(void);
 /* USER CODE END EFP */
 

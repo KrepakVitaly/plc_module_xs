@@ -34,7 +34,7 @@ void MX_ADC_Init(void)
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
   */
   hadc.Instance = ADC1;
-  hadc.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+  hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
   hadc.Init.Resolution = ADC_RESOLUTION_12B;
   hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
@@ -62,19 +62,18 @@ void MX_ADC_Init(void)
   }
   /** Configure for the selected ADC regular channel to be converted. 
   */
-  sConfig.Channel = ADC_CHANNEL_5;
-  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
+//  sConfig.Channel = ADC_CHANNEL_5;
+//  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+//  {
+//    Error_Handler();
+//  }
   /** Configure for the selected ADC regular channel to be converted. 
   */
-  sConfig.Channel = ADC_CHANNEL_6;
-  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
+//  sConfig.Channel = ADC_CHANNEL_6;
+//  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+//  {
+//    Error_Handler();
+//  }
 }
 
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
@@ -136,6 +135,67 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+void config_ext_channel_ADC(uint32_t channel, uint8_t val)
+{
+  ADC_ChannelConfTypeDef sConfig;
+
+  sConfig.Channel = channel;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+
+  if(val == 1)
+  {
+    sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
+  }
+  else
+  {
+    sConfig.Rank = ADC_RANK_NONE;
+  }
+
+  HAL_ADC_ConfigChannel(&hadc, &sConfig);
+}
+
+uint16_t r_single_ext_channel_ADC(uint32_t channel)
+{
+  uint16_t digital_result;
+
+  config_ext_channel_ADC(channel, 1);
+
+  HAL_ADCEx_Calibration_Start(&hadc);
+
+  HAL_ADC_Start(&hadc);
+	if (HAL_ADC_PollForConversion(&hadc, 1) == HAL_OK) //if conversion is successful
+	{
+		digital_result = HAL_ADC_GetValue(&hadc);  //get value from ADC
+	}
+	else
+	{
+		digital_result = 0x66; //Error code (only for debug purpose)
+	}
+  HAL_ADC_Stop(&hadc);
+  config_ext_channel_ADC(channel, 0);
+  return digital_result;
+}
+
+uint16_t get_amps_value(void)
+{
+  uint16_t digital_val;
+  digital_val = r_single_ext_channel_ADC(AMPS_SIGNAL);
+  return digital_val;
+}
+
+uint16_t get_temp_value(void)
+{
+  uint16_t digital_val;
+  digital_val = r_single_ext_channel_ADC(TEMP_SIGNAL);
+  return digital_val;
+}
+
+uint16_t get_volts_value(void)
+{
+  uint16_t digital_val;
+  digital_val = r_single_ext_channel_ADC(VOLTS_SIGNAL);
+  return digital_val;
+}
 
 /* USER CODE END 1 */
 
