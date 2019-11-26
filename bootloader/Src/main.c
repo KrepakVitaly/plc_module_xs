@@ -43,8 +43,8 @@ void SystemClock_Config(void);
 #define APPLICATION_START_ADDRESS   0x08004000U
 #define APPLICATION_LENGTH          0x00004000U
 
-#define TIMEOUT_VALUE               SystemCoreClock/3200
-#define START_TIMEOUT_VALUE         SystemCoreClock/3200
+#define TIMEOUT_VALUE               SystemCoreClock/1600
+#define START_TIMEOUT_VALUE         SystemCoreClock/1600
 #define TX_TIMEOUT_VALUE            1000
 
 #define ACK     0x06U
@@ -167,6 +167,8 @@ int main(void)
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
+  
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET); // ONOFF output
 
   /* Hookup Host and Target                                         */
   /* First send a Maintenance packet. Host should reply with ACK    */
@@ -441,17 +443,7 @@ static void Write(void)
     checksum_intel += (uint8_t)((startingAddress >> 8)& 0x000000FF);
     checksum_intel += (uint8_t)(startingAddress & 0x000000FF);
     checksum_intel += pRxBuffer[numBytes+1];
-    
-   // checksum_intel = ~checksum_intel;
-  
-    // Check checksum of received data
-    if(checksum_intel != 0x00)
-    {
-      // invalid checksum
-      Send_NACK(&huart1);
-      //return;
-    }
-    
+
     // valid checksum at this point
     // Program flash with the data
     uint8_t i = 1;
@@ -465,8 +457,18 @@ static void Write(void)
     }
     HAL_FLASH_Lock();
     
-    // Send ACK
-    Send_ACK(&huart1);
+    // Check checksum of received data
+    if(checksum_intel != 0x00)
+    {
+      // invalid checksum
+      Send_NACK(&huart1);
+      //return;
+    }
+    else
+    {
+      // Send ACK
+      Send_ACK(&huart1);
+    }
 }
 
 
@@ -520,10 +522,17 @@ static void Verify(void)
                                 ((uint8_t*) &crcResult)[2], 
                                 ((uint8_t*) &crcResult)[3] };
     
-    HAL_UART_Transmit(&huart1, plc_buf, 5, 1000);
+    HAL_UART_Transmit(&huart1, plc_buf, 5, TX_TIMEOUT_VALUE);
     
     if(crcResult == correct_checksum)
     {
+        Signature.Firmware_CRC32 = crcResult;
+        
+        HAL_FLASH_Unlock();
+        HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, 
+                         (FLASH_ADDR_FOR_STORING+sizeof(uint32_t)*FW_CRC_OFFSET), 
+                         (uint32_t)crcResult);
+        HAL_FLASH_Lock();
         Send_ACK(&huart1);
     }
     else
@@ -568,11 +577,6 @@ static uint8_t CheckMaintenance(uint8_t * pBuffer)
   if (pBuffer[15] != 0x05 && pBuffer[16] != 0x00 && pBuffer[17] != 0x00)
     return 0;
 
-  
-  /* Reset CRC Calculation Unit (hcrc->Instance->INIT is 
-  *  written in hcrc->Instance->DR) */
-  __HAL_CRC_DR_RESET(&hcrc);
-  
   uint32_t packet_crc = HAL_CRC_Calculate(&hcrc, 
                         (uint32_t*)pBuffer, 
                         MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
@@ -586,9 +590,6 @@ static uint8_t CheckMaintenance(uint8_t * pBuffer)
 
   return 1;
 }
-
-
-
 
 /* USER CODE END 4 */
 

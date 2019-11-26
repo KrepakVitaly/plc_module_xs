@@ -56,6 +56,7 @@ void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
+
 }
 /* TIM3 init function */
 void MX_TIM3_Init(void)
@@ -107,7 +108,7 @@ void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 64999;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 64999;
+  htim14.Init.Period = 29;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)

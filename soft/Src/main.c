@@ -256,15 +256,11 @@ void JumpToBootloader(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  if (htim == &htim1) 
+  if (htim == &htim14) // Offline detector
 	{	
     HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 	}
-  
-  if (htim == &htim14)  // Offline detector
-	{	
-    //HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-	}
+ 
 }
 
 
