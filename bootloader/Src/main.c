@@ -43,9 +43,9 @@ void SystemClock_Config(void);
 #define APPLICATION_START_ADDRESS   0x08004000U
 #define APPLICATION_LENGTH          0x00004000U
 
-#define TIMEOUT_VALUE               SystemCoreClock/1600
+#define TIMEOUT_VALUE               SystemCoreClock/100
 #define START_TIMEOUT_VALUE         SystemCoreClock/1600
-#define TX_TIMEOUT_VALUE            1000
+#define TX_TIMEOUT_VALUE            3000
 
 #define ACK     0x06U
 #define NACK    0x16U
@@ -55,7 +55,7 @@ void SystemClock_Config(void);
 /*****************************************************************************/
 /*! \brief Buffer for received messages
  */
-static uint8_t pRxBuffer[32];
+static uint8_t pRxBuffer[64];
 
 typedef enum
 {
@@ -63,6 +63,7 @@ typedef enum
     WRITE  = 0x31,
     VERIFY = 0x51,
     JUMP   = 0xA1,
+    SWITCH = 0xF1,
 } COMMANDS;
 
 /*****************************************************************************/
@@ -128,6 +129,8 @@ void remapMemToSRAM( void )
  
     __enable_irq();
 }
+
+static void ClearpRxBuffer (void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -151,7 +154,24 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+//#ifdef ENABLE_RDP_LEVEL1
+//  FLASH_OBProgramInitTypeDef FLASH_RDP;
+//  HAL_FLASHEx_OBGetConfig(&FLASH_RDP);
+//  if (  FLASH_RDP.RDPLevel == OB_RDP_LEVEL_0 )
+//  {
+//    HAL_FLASH_Unlock();
+//    HAL_FLASH_OB_Unlock();
+//    FLASH_RDP.RDPLevel = OB_RDP_LEVEL_1;
+//    FLASH_RDP.OptionType = OPTIONBYTE_RDP;
+//    HAL_FLASHEx_OBErase();
+//    HAL_FLASHEx_OBProgram(&FLASH_RDP); 
+//    HAL_FLASH_OB_Launch();
+//    HAL_FLASH_OB_Lock();
+//    HAL_FLASH_Lock(); 
+//  }
+//#endif  
   Init_UUID();
+  ClearpRxBuffer();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -166,28 +186,32 @@ int main(void)
   MX_USART1_UART_Init();
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim1);
-  
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET); // ONOFF output
 
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET); // ONOFF output
+  HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_RESET);
+  
+  HAL_TIM_Base_Start_IT(&htim1);
   /* Hookup Host and Target                                         */
   /* First send a Maintenance packet. Host should reply with ACK    */
   /* If no valid packet is received within TIMEOUT_VALUE            */
   /* then jump to main application                                  */
+  
+  // wait for the Maintenance packet with UID of this uC
   if(HAL_UART_Receive(&huart1, pRxBuffer, MAINTENANCE_PACKET_SIZE, START_TIMEOUT_VALUE) != HAL_OK)
   {
     JumpToApplication();
   }
-  // wait for the Maintenance packet with UID of this uC
+  // if no valid packet, silently switch to the app
   if(CheckMaintenance(pRxBuffer) != 1)
   {
-    Send_NACK(&huart1);
     JumpToApplication();
   }
   else
   {
     Send_ACK(&huart1);
   }
+
   /* At this point, hookup communication is complete */
   /* Wait for commands and execute accordingly       */
   /* USER CODE END 2 */
@@ -226,6 +250,11 @@ int main(void)
             Send_ACK(&huart1);
             JumpToApplication();
             break;
+        case SWITCH:
+            HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1); // ONOFF output
+            Send_ACK(&huart1);
+            JumpToApplication();
+            break;
         default: // Unsupported command
             Send_NACK(&huart1);
             break;
@@ -241,30 +270,37 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-  LL_FLASH_SetLatency(LL_FLASH_LATENCY_0);
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_0)
+  /** Initializes the CPU, AHB and APB busses clocks 
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-  Error_Handler();  
+    Error_Handler();
   }
-  LL_RCC_HSE_Enable();
+  /** Initializes the CPU, AHB and APB busses clocks 
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-   /* Wait till HSE is ready */
-  while(LL_RCC_HSE_IsReady() != 1)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
-    
+    Error_Handler();
   }
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSE);
-
-   /* Wait till System clock is ready */
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSE)
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
-  
+    Error_Handler();
   }
-  LL_SetSystemCoreClock(16000000);
-  LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_PCLK1);
 }
 
 /* USER CODE BEGIN 4 */
@@ -363,6 +399,7 @@ static void Erase(void)
     // 1 Receive the number of pages to be erased (1 byte)
     // 2 the initial sector to erase  (1 byte)
     // 3 and the checksum             (1 byte)
+    ClearpRxBuffer();
     while(HAL_UART_Receive(&huart1, pRxBuffer, 4, TIMEOUT_VALUE) != HAL_OK);
     // validate checksum
     if(CheckChecksum(pRxBuffer, 4) != 1)
@@ -411,6 +448,7 @@ static void Write(void)
     // 1-4Address = 4 bytes
     // 5numBytes = 1 byte number of bytes to be written
     // 6Checksum = 1 byte
+    ClearpRxBuffer();
     while(HAL_UART_Receive(&huart1, pRxBuffer, 7, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum
@@ -418,7 +456,7 @@ static void Write(void)
     {
       // invalid checksum
       Send_NACK(&huart1);
-      return;
+      //return;
     }
     else
     {
@@ -433,7 +471,15 @@ static void Write(void)
     uint8_t numBytes = pRxBuffer[5];
     
     // Receive the data
-    while(HAL_UART_Receive(&huart1, pRxBuffer, numBytes+2, TIMEOUT_VALUE) != HAL_OK);
+    ClearpRxBuffer();
+    
+    uint8_t rxed_bytes = 0;
+    while(rxed_bytes != numBytes+2)
+    {
+      HAL_UART_Receive(&huart1, pRxBuffer+rxed_bytes, 1, TIMEOUT_VALUE);
+      rxed_bytes++;
+    };
+    HAL_UART_Abort(&huart1);
     
     uint8_t checksum_intel = 0;
     for (uint8_t i = 1; i <= numBytes; i++)
@@ -481,6 +527,7 @@ static void Verify(void)
     // AddressEnd = 4 bytes
     // Checksum = 4 byte
     // packet Checksum = 1 byte
+    ClearpRxBuffer();
     while(HAL_UART_Receive(&huart1, pRxBuffer, 14, TIMEOUT_VALUE) != HAL_OK);
     
     // Check checksum
@@ -502,7 +549,7 @@ static void Verify(void)
     uint32_t endingAddress = ((uint32_t)pRxBuffer[5] << 24) + ((uint32_t) pRxBuffer[6] << 16) 
                            + ((uint32_t)pRxBuffer[7] << 8 ) + ((uint32_t)pRxBuffer[8] << 0 );
     
-    uint32_t correct_checksum = ((uint32_t)pRxBuffer[9] << 0) + ((uint32_t)pRxBuffer[10] << 8) 
+    uint32_t correct_checksum = ((uint32_t)pRxBuffer[9]  << 0 ) + ((uint32_t)pRxBuffer[10] << 8) 
                               + ((uint32_t)pRxBuffer[11] << 16) + ((uint32_t)pRxBuffer[12] << 24 );
     
     uint8_t * data = (uint8_t *)((__IO uint8_t*) startingAddress);
@@ -541,6 +588,14 @@ static void Verify(void)
     }
     
     return;
+}
+
+static void ClearpRxBuffer (void)
+{
+  for (uint8_t i = 0; i < 64; i++)
+  {
+    pRxBuffer[i] = 0;
+  }
 }
 
 static uint8_t CheckMaintenance(uint8_t * pBuffer)
