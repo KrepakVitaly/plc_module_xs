@@ -1,0 +1,31 @@
+SET PATH=C:\Keil_v5\ARM\ARMCLANG\Bin;C:\Keil_v5\ARM\ARMCC\Bin;C:\Program Files\STMicroelectronics\STM32Cube\STM32CubeMX530\;C:\Program Files\Python\Python37\Scripts\;C:\Program Files\Python\Python37\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Common Files\Acronis\VirtualFile\;C:\Program Files (x86)\Common Files\Acronis\VirtualFile64\;C:\Program Files (x86)\Common Files\Acronis\SnapAPI\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\PuTTY\;;C:\Users\krepak\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\Java\jre1.8.0_231\bin
+SET CPU_TYPE=STM32F031F6Px
+SET CPU_VENDOR=STMicroelectronics
+SET UV2_TARGET=test_plc_module_xs
+SET CPU_CLOCK=0x007A1200
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmAsm" --Via "test_plc_module_xs\startup_stm32f031x6._ia"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\main.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\gpio.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_it.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_msp.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_ll_gpio.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_tim.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_tim_ex.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_ll_rcc.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_ll_utils.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_ll_exti.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_rcc.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_rcc_ex.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_i2c.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_i2c_ex.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_gpio.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_dma.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_cortex.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_pwr.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_pwr_ex.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_flash.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\stm32f0xx_hal_flash_ex.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmClang.exe" @"test_plc_module_xs\system_stm32f0xx.__i"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\ArmLink" --Via "test_plc_module_xs\test_plc_module_xs.lnp"
+"C:\Keil_v5\ARM\ARMCLANG\Bin\fromelf.exe" "test_plc_module_xs\test_plc_module_xs.axf" --i32combined --output "test_plc_module_xs\test_plc_module_xs.hex"
