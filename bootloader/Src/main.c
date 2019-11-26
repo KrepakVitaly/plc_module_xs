@@ -44,7 +44,7 @@ void SystemClock_Config(void);
 #define APPLICATION_LENGTH          0x00004000U
 
 #define TIMEOUT_VALUE               SystemCoreClock/100
-#define START_TIMEOUT_VALUE         SystemCoreClock/1600
+#define START_TIMEOUT_VALUE         SystemCoreClock/3200
 #define TX_TIMEOUT_VALUE            3000
 
 #define ACK     0x06U
