@@ -62,9 +62,14 @@ extern "C" {
 
 #define TIME_WAIT_OFFLINE   1800
 
-#define AMPS_SIGNAL  ADC_CHANNEL_4
 #define VOLTS_SIGNAL ADC_CHANNEL_0
+#define AMPS_SIGNAL  ADC_CHANNEL_4
 #define TEMP_SIGNAL ADC_CHANNEL_5
+#define TEMP2_SIGNAL  ADC_CHANNEL_6
+#define TEMPINT_SIGNAL ADC_CHANNEL_16
+
+
+
 
 /* USER CODE END EM */
 
@@ -77,18 +82,27 @@ extern uint8_t brightness_g;
 extern uint16_t volt_g;
 extern uint16_t amps_g;
 extern uint16_t temp_g;
+extern uint16_t temp2_g;
+extern uint16_t tempint_g;
+extern uint32_t vrefint_g;
 void JumpToBootloader(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SENSE_10V_Pin GPIO_PIN_0
-#define SENSE_10V_GPIO_Port GPIOA
+#define SENSE_0_10_PWR_ADC_Pin GPIO_PIN_0
+#define SENSE_0_10_PWR_ADC_GPIO_Port GPIOA
 #define PLC_MODE_Pin GPIO_PIN_1
 #define PLC_MODE_GPIO_Port GPIOA
 #define PLC_RESET_Pin GPIO_PIN_2
 #define PLC_RESET_GPIO_Port GPIOA
 #define PWM_Pin GPIO_PIN_3
 #define PWM_GPIO_Port GPIOA
+#define AMPSADC_INPUT_Pin GPIO_PIN_4
+#define AMPSADC_INPUT_GPIO_Port GPIOA
+#define TEMP1_ADC_INPUT_Pin GPIO_PIN_5
+#define TEMP1_ADC_INPUT_GPIO_Port GPIOA
+#define TEMP0_ADC_INPUT_Pin GPIO_PIN_6
+#define TEMP0_ADC_INPUT_GPIO_Port GPIOA
 #define LED2_Pin GPIO_PIN_7
 #define LED2_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

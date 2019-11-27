@@ -59,7 +59,11 @@ uint8_t brightness_g = 0;
 uint16_t volt_g = 0;
 uint16_t amps_g = 0;
 uint16_t temp_g = 0;
+uint16_t temp2_g = 0;
+uint16_t tempint_g = 0;
+uint32_t vrefint_g = 0;
 uint32_t time_seconds = 0;
+
 
 CircularBuffer_Typedef kq130_buf;
 uint8_t packet_analyze_buf[PACKET_SIZE];
@@ -137,6 +141,9 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 
   // Start Timer for ADC flag
+  HAL_ADCEx_Calibration_Start(&hadc);
+  
+  
   HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
   HAL_TIM_Base_Start_IT(&htim14); // Offline Detection Sensor; 
   
@@ -236,10 +243,12 @@ void SystemClock_Config(void)
  */
 void JumpToBootloader(void) 
 {
+  HAL_UART_AbortReceive_IT(&huart1);
   HAL_TIM_Base_Stop(&htim1);
   HAL_TIM_Base_Stop(&htim14);
   HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_4);
-
+  HAL_ADC_Stop(&hadc);
+  
   if (((*(__IO uint32_t*)BOOT_FLAG_ADDRESS) & 0x2FFE0000 ) == 0x20000000)
   {
     /* First, disable all IRQs */
@@ -265,9 +274,47 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim == &htim1)
   {
-    volt_g = (get_volts_value());
-    amps_g = (get_amps_value());
-    temp_g = (get_temp_value());
+
+    uint16_t ADCValue = 0x00;
+    uint16_t MCUTemperatureDegrees = 0;
+    HAL_ADC_Start(&hadc);
+    if (HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY) == HAL_OK)
+    {
+      volt_g = HAL_ADC_GetValue(&hadc); /* Gets volt_g */
+    //HAL_ADC_PollForConversion(&hadc, 100);
+      amps_g = HAL_ADC_GetValue(&hadc); /* Gets amps_g */
+//    HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY);
+      temp_g = HAL_ADC_GetValue(&hadc); /* Gets temp_g */
+//    HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY);
+      temp2_g = HAL_ADC_GetValue(&hadc); /* Gets temp2_g */
+//    HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY);
+      tempint_g = HAL_ADC_GetValue(&hadc); /* Gets tempint_g */
+//    HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY);
+      vrefint_g = HAL_ADC_GetValue(&hadc); /* Gets vrefint_g */      
+    }
+    HAL_ADC_Stop(&hadc);
+    //MCUTemperatureDegrees = __LL_ADC_CALC_TEMPERATURE(3300, ADCValue, LL_ADC_RESOLUTION_12B);
+    
+    uint8_t data[13] = {12, 
+                          volt_g >> 8, volt_g & 0xFF,
+                          amps_g >> 8, amps_g & 0xFF,
+                          temp_g >> 8, temp_g & 0xFF,
+                          temp2_g >> 8, temp2_g & 0xFF,
+                          tempint_g >> 8, tempint_g & 0xFF,      
+                          vrefint_g >> 8, vrefint_g & 0xFF
+    
+    };
+    //HAL_UART_Transmit(&huart1, data, 13, 100);
+
+//    
+//    tempint_g = get_internal_temp();
+//    temp_g = get_temp_value();
+//    temp2_g = get_temp2_value();
+//    volt_g = get_volts_value();
+//    amps_g = get_amps_value();
+//    
+    
+    
   }
   if (htim == &htim14) // Offline detector
 	{	

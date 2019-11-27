@@ -34,14 +34,14 @@ void MX_ADC_Init(void)
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
   */
   hadc.Instance = ADC1;
-  hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+  hadc.Init.Resolution = ADC_RESOLUTION_8B;
   hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
   hadc.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc.Init.LowPowerAutoWait = DISABLE;
   hadc.Init.LowPowerAutoPowerOff = DISABLE;
-  hadc.Init.ContinuousConvMode = DISABLE;
+  hadc.Init.ContinuousConvMode = ENABLE;
   hadc.Init.DiscontinuousConvMode = DISABLE;
   hadc.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -53,27 +53,49 @@ void MX_ADC_Init(void)
   }
   /** Configure for the selected ADC regular channel to be converted. 
   */
-  sConfig.Channel = ADC_CHANNEL_4;
+  sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_13CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
   /** Configure for the selected ADC regular channel to be converted. 
   */
-//  sConfig.Channel = ADC_CHANNEL_5;
-//  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
+  sConfig.Channel = ADC_CHANNEL_4;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /** Configure for the selected ADC regular channel to be converted. 
   */
-//  sConfig.Channel = ADC_CHANNEL_6;
-//  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
+  sConfig.Channel = ADC_CHANNEL_5;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure for the selected ADC regular channel to be converted. 
+  */
+  sConfig.Channel = ADC_CHANNEL_6;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure for the selected ADC regular channel to be converted. 
+  */
+  sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure for the selected ADC regular channel to be converted. 
+  */
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
 }
 
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
@@ -90,18 +112,16 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
   
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**ADC GPIO Configuration    
+    PA0     ------> ADC_IN0
     PA4     ------> ADC_IN4
     PA5     ------> ADC_IN5
     PA6     ------> ADC_IN6 
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6;
+    GPIO_InitStruct.Pin = SENSE_0_10_PWR_ADC_Pin|AMPSADC_INPUT_Pin|TEMP1_ADC_INPUT_Pin|TEMP0_ADC_INPUT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    /* ADC1 interrupt Init */
-    HAL_NVIC_SetPriority(ADC1_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(ADC1_IRQn);
   /* USER CODE BEGIN ADC1_MspInit 1 */
 
   /* USER CODE END ADC1_MspInit 1 */
@@ -120,14 +140,13 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     __HAL_RCC_ADC1_CLK_DISABLE();
   
     /**ADC GPIO Configuration    
+    PA0     ------> ADC_IN0
     PA4     ------> ADC_IN4
     PA5     ------> ADC_IN5
     PA6     ------> ADC_IN6 
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6);
+    HAL_GPIO_DeInit(GPIOA, SENSE_0_10_PWR_ADC_Pin|AMPSADC_INPUT_Pin|TEMP1_ADC_INPUT_Pin|TEMP0_ADC_INPUT_Pin);
 
-    /* ADC1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(ADC1_IRQn);
   /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
   /* USER CODE END ADC1_MspDeInit 1 */
@@ -140,7 +159,7 @@ void config_ext_channel_ADC(uint32_t channel, uint8_t val)
   ADC_ChannelConfTypeDef sConfig;
 
   sConfig.Channel = channel;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
 
   if(val == 1)
   {
@@ -163,7 +182,7 @@ uint16_t r_single_ext_channel_ADC(uint32_t channel)
   HAL_ADCEx_Calibration_Start(&hadc);
 
   HAL_ADC_Start(&hadc);
-	if (HAL_ADC_PollForConversion(&hadc, 1) == HAL_OK) //if conversion is successful
+	if (HAL_ADC_PollForConversion(&hadc, 100) == HAL_OK) //if conversion is successful
 	{
 		digital_result = HAL_ADC_GetValue(&hadc);  //get value from ADC
 	}
@@ -190,10 +209,24 @@ uint16_t get_temp_value(void)
   return digital_val;
 }
 
+uint16_t get_temp2_value(void)
+{
+  uint16_t digital_val;
+  digital_val = r_single_ext_channel_ADC(TEMP2_SIGNAL);
+  return digital_val;
+}
+
 uint16_t get_volts_value(void)
 {
   uint16_t digital_val;
   digital_val = r_single_ext_channel_ADC(VOLTS_SIGNAL);
+  return digital_val;
+}
+
+uint16_t get_internal_temp(void)
+{
+  uint16_t digital_val;
+  digital_val = r_single_ext_channel_ADC(ADC_CHANNEL_TEMPSENSOR);
   return digital_val;
 }
 

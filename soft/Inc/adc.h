@@ -39,13 +39,14 @@ extern ADC_HandleTypeDef hadc;
 void MX_ADC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
-
-void config_ext_channel_ADC(uint32_t channel, uint8_t val);
-uint16_t r_single_ext_channel_ADC(uint32_t channel);
-uint16_t get_amps_value(void);
 uint16_t get_temp_value(void);
+uint16_t get_internal_temp(void);
+
 uint16_t get_volts_value(void);
+uint16_t get_temp2_value(void);
+uint16_t get_amps_value(void);
+uint16_t get_internal_temp(void);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
