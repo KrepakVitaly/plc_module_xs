@@ -598,54 +598,51 @@ static void ClearpRxBuffer (void)
   }
 }
 
-static uint8_t CheckMaintenance(uint8_t * test_packet)
+static uint8_t CheckMaintenance(uint8_t * pBuffer)
 {
-  return 1;
-  // Test packet length byte
-  if (test_packet[0] != MAINTENANCE_PACKET_SIZE - 1)
-    return 0;
-  // Test packet head 1 byte
-  if (test_packet[1] != MAINTENANCE_PACKET_HEAD_BYTE_1)
-    return 0;
-  // Test packet head 2 byte
-  if (test_packet[2] != MAINTENANCE_PACKET_HEAD_BYTE_2)
-    return 0;
-  
-  uint32_t rx_part_id1 = ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+0] << 0) + 
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+1] << 8) +
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+2] << 16 ) +
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+3] << 24 );
-  
-  uint32_t rx_part_id2 = ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+4] << 0) + 
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+5] << 8) +
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+6] << 16 ) +
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+7] << 24 );
-  
-  uint32_t rx_part_id3 = ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+8] << 0) + 
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+9] << 8) +
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+10] << 16 ) +
-                         ((uint32_t)test_packet[REGULAR_PACKET_HEAD_SIZE+11] << 24 );
-  // Test target id of the packet
-  if (Signature.idPart1 != rx_part_id1)
-    return 0;
-  if (Signature.idPart2 != rx_part_id2)
-    return 0;
-  if (Signature.idPart3 != rx_part_id3)
-    return 0;  
+  if (pBuffer[0] != MAINTENANCE_PACKET_SIZE - 1) //check first byte KQ330 protocol
+    return 0; //error
 
-  uint32_t calc_crc = HAL_CRC_Calculate(&hcrc, 
-                        (uint32_t*)test_packet, 
+  if (pBuffer[1] != MAINTENANCE_PACKET_HEAD_BYTE_1)
+    return 0; //error
+
+  if (pBuffer[2] != MAINTENANCE_PACKET_HEAD_BYTE_2)
+    return 0; //error
+  
+  uint32_t rxed_id_part1 = (pBuffer[3] << 0)
+                    + (pBuffer[4]  << 8 ) 
+                    + (pBuffer[5]  << 16) 
+                    + (pBuffer[6]  << 24); 
+  uint32_t rxed_id_part2 = (pBuffer[7] << 0)
+                    + (pBuffer[8]  << 8 ) 
+                    + (pBuffer[9]  << 16) 
+                    + (pBuffer[10] << 24); 
+  uint32_t rxed_id_part3 = (pBuffer[11] << 0)
+                    + (pBuffer[12] << 8 ) 
+                    + (pBuffer[13] << 16) 
+                    + (pBuffer[14] << 24); 
+  
+  if (rxed_id_part1 != Signature.idPart1)
+    return 0;
+  if (rxed_id_part2 != Signature.idPart2)
+    return 0;
+  if (rxed_id_part3 != Signature.idPart3)
+    return 0;
+
+  if (pBuffer[15] != 0x05 && pBuffer[16] != 0x00 && pBuffer[17] != 0x00)
+    return 0;
+
+  uint32_t packet_crc = HAL_CRC_Calculate(&hcrc, 
+                        (uint32_t*)pBuffer, 
                         MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE);
   
-  uint32_t rxed_crc = ((uint32_t)test_packet[MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE] << 24) + 
-                      ((uint32_t)test_packet[MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE+1] << 16) +
-                      ((uint32_t)test_packet[MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE+2] << 8 ) +
-                      ((uint32_t)test_packet[MAINTENANCE_PACKET_SIZE-MAINTENANCE_PACKET_CRC_SIZE+3] << 0 );
-  
-  // Test packet crc sum
-  if (rxed_crc != calc_crc)
-    return 0;
-  
+  uint32_t rxed_crc = (pBuffer[MAINTENANCE_PACKET_SIZE-4] << 24)
+                    + (pBuffer[MAINTENANCE_PACKET_SIZE-3] << 16) 
+                    + (pBuffer[MAINTENANCE_PACKET_SIZE-2] << 8) 
+                    + (pBuffer[MAINTENANCE_PACKET_SIZE-1] << 0);
+  if (rxed_crc != packet_crc)
+    return 0;  
+
   return 1;
 }
 
