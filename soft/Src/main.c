@@ -107,7 +107,7 @@ void remapMemToSRAM( void )
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  remapMemToSRAM();
+  //remapMemToSRAM();
   /* USER CODE END 1 */
   
 
@@ -117,7 +117,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  Init_UUID();
   for (uint8_t i = 0; i < PACKET_SIZE; i++)
     packet_analyze_buf[i] = 0;
   /* USER CODE END Init */
@@ -137,12 +136,12 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM14_Init();
   MX_TIM3_Init();
+  Init_UUID();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+  //HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 
   // Start Timer for ADC flag
   HAL_ADCEx_Calibration_Start(&hadc);
-  
   
   HAL_TIM_Base_Start_IT(&htim1); // UpdateSensorsValues(); 
   HAL_TIM_Base_Start_IT(&htim14); // Offline Detection Sensor; 
@@ -162,7 +161,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+//HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
     /* USER CODE BEGIN 3 */
     //Receive 1 byte from KQ130F
     HAL_UART_Receive_IT(&huart1, &plc_uart_buf, 1);
@@ -322,7 +321,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if (time_seconds <= TIME_WAIT_OFFLINE)
     {
       time_seconds += 1;
-      HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+      //HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
     }
     
     if (time_seconds == TIME_WAIT_OFFLINE)
