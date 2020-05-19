@@ -170,7 +170,7 @@ int main(void)
 //    HAL_FLASH_Lock(); 
 //  }
 //#endif  
-  Init_UUID();
+  
   ClearpRxBuffer();
   /* USER CODE END Init */
 
@@ -186,7 +186,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
-
+  Init_UUID();
+  
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET); // ONOFF output
   HAL_GPIO_WritePin(PLC_RESET_GPIO_Port, PLC_RESET_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(PLC_MODE_GPIO_Port, PLC_MODE_Pin, GPIO_PIN_RESET);

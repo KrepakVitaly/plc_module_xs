@@ -366,11 +366,11 @@ ARM Macro Assembler    Page 6
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0 --apcs=interw
 ork --depend=plc_module_xs\startup_stm32f031x6.d -oplc_module_xs\startup_stm32f
-031x6.o -I.\RTE\_plc_module_xs -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Incl
-ude -IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM3
-2F0xx\Include --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --pre
-define="__UVISION_VERSION SETA 525" --predefine="_RTE_ SETA 1" --predefine="STM
-32F031x6 SETA 1" --list=startup_stm32f031x6.lst startup_stm32f031x6.s
+031x6.o -I.\RTE\_plc_module_xs -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Core
+\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST
+\STM32F0xx\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSI
+ON SETA 525" --predefine="_RTE_ SETA 1" --predefine="STM32F031x6 SETA 1" --list
+=startup_stm32f031x6.lst startup_stm32f031x6.s
 
 
 
@@ -828,4 +828,4 @@ Symbol: __main
       At line 135 in file startup_stm32f031x6.s
 Comment: __main used once
 2 symbols
-382 symbols in table
+381 symbols in table
